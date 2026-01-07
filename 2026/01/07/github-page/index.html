@@ -14,7 +14,7 @@
 <meta property="og:description" content="第一阶段：本地环境配置 安装核心工具：安装 Node.js 和 Git。  权限解锁：在 PowerShell 中执行 Set-ExecutionPolicy RemoteSigned 以允许运行 npm 脚本。  安装 Hexo：运行 npm install -g hexo-cli。    ⚠️ 常见犯错提示：  脚本禁用错误：如果你直接运行 hexo 报错“在此系统上禁止运行脚本”，记得一定要">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2026-01-07T12:12:02.000Z">
-<meta property="article:modified_time" content="2026-01-07T12:12:58.237Z">
+<meta property="article:modified_time" content="2026-01-07T12:44:50.223Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -147,11 +147,58 @@
 </li>
 </ul>
 </blockquote>
+<hr>
+<h3 id="第四阶段：笔记整理与上传流程"><a href="#第四阶段：笔记整理与上传流程" class="headerlink" title="第四阶段：笔记整理与上传流程"></a>第四阶段：笔记整理与上传流程</h3><p>这是你以后<strong>最常重复</strong>的步骤：</p>
+<table>
+<thead>
+<tr>
+<th><strong>步骤</strong></th>
+<th><strong>命令</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>1. 新建</strong></td>
+<td><code>hexo new &quot;标题&quot;</code></td>
+<td>在 <code>source/_posts</code> 生成 .md 文件</td>
+</tr>
+<tr>
+<td><strong>2. 编写</strong></td>
+<td>使用 VS Code 编写</td>
+<td>建议给 C++&#x2F;Java 笔记设置清晰的 <code>tags</code> 和 <code>categories</code></td>
+</tr>
+<tr>
+<td><strong>3. 清理</strong></td>
+<td><code>hexo clean</code></td>
+<td><strong>必做</strong>，防止旧缓存导致页面显示异常</td>
+</tr>
+<tr>
+<td><strong>4. 生成</strong></td>
+<td><code>hexo g</code></td>
+<td>将 Markdown 渲染成 HTML 网页</td>
+</tr>
+<tr>
+<td><strong>5. 上传</strong></td>
+<td><code>hexo d</code></td>
+<td>推送到 GitHub 服务器</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>⚠️ 常见犯错提示：</strong></p>
+<ul>
+<li><p><strong>网络连接重置</strong>：报错 <code>Connection was reset</code> 或 <code>Failed to connect</code> 时，检查你的 Git 代理设置。如果你没开代理软件，运行 <code>git config --global --unset http.proxy</code> 取消代理。</p>
+</li>
+<li><p><strong>图片无法显示</strong>：笔记中的图片路径如果指向你电脑本地（如 <code>C:\Users\...</code>），上传后博客会“碎图”。建议学习使用 <strong>PicGo 图床</strong> 或将图片放入 <code>source/images</code> 文件夹并使用相对路径。</p>
+</li>
+<li><p><strong>源码丢失</strong>：<code>hexo d</code> 只会上传“网页结果”，<strong>不会备份你的 .md 原稿</strong>。建议将整个博客文件夹再建立一个私有仓库备份，防止电脑宕机。</p>
+</li>
+</ul>
+</blockquote>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/01/07/github-page/" data-id="cuid1NRWwhaIoiC4LW7hjzonR" data-title="github_page" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/01/07/github-page/" data-id="cuidizrcbvoc0J4u6Xlkci3Yy" data-title="github_page" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -159,6 +206,16 @@
   </div>
   
     
+<nav id="article-nav">
+  
+  
+    <a href="/2026/01/07/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Hello World</div>
+    </a>
+  
+</nav>
+
   
 </article>
 
@@ -193,6 +250,10 @@
         
           <li>
             <a href="/2026/01/07/github-page/">github_page</a>
+          </li>
+        
+          <li>
+            <a href="/2026/01/07/hello-world/">Hello World</a>
           </li>
         
       </ul>

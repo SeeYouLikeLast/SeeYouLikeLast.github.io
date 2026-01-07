@@ -145,11 +145,109 @@
 </li>
 </ul>
 </blockquote>
+<hr>
+<h3 id="第四阶段：笔记整理与上传流程"><a href="#第四阶段：笔记整理与上传流程" class="headerlink" title="第四阶段：笔记整理与上传流程"></a>第四阶段：笔记整理与上传流程</h3><p>这是你以后<strong>最常重复</strong>的步骤：</p>
+<table>
+<thead>
+<tr>
+<th><strong>步骤</strong></th>
+<th><strong>命令</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>1. 新建</strong></td>
+<td><code>hexo new &quot;标题&quot;</code></td>
+<td>在 <code>source/_posts</code> 生成 .md 文件</td>
+</tr>
+<tr>
+<td><strong>2. 编写</strong></td>
+<td>使用 VS Code 编写</td>
+<td>建议给 C++&#x2F;Java 笔记设置清晰的 <code>tags</code> 和 <code>categories</code></td>
+</tr>
+<tr>
+<td><strong>3. 清理</strong></td>
+<td><code>hexo clean</code></td>
+<td><strong>必做</strong>，防止旧缓存导致页面显示异常</td>
+</tr>
+<tr>
+<td><strong>4. 生成</strong></td>
+<td><code>hexo g</code></td>
+<td>将 Markdown 渲染成 HTML 网页</td>
+</tr>
+<tr>
+<td><strong>5. 上传</strong></td>
+<td><code>hexo d</code></td>
+<td>推送到 GitHub 服务器</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>⚠️ 常见犯错提示：</strong></p>
+<ul>
+<li><p><strong>网络连接重置</strong>：报错 <code>Connection was reset</code> 或 <code>Failed to connect</code> 时，检查你的 Git 代理设置。如果你没开代理软件，运行 <code>git config --global --unset http.proxy</code> 取消代理。</p>
+</li>
+<li><p><strong>图片无法显示</strong>：笔记中的图片路径如果指向你电脑本地（如 <code>C:\Users\...</code>），上传后博客会“碎图”。建议学习使用 <strong>PicGo 图床</strong> 或将图片放入 <code>source/images</code> 文件夹并使用相对路径。</p>
+</li>
+<li><p><strong>源码丢失</strong>：<code>hexo d</code> 只会上传“网页结果”，<strong>不会备份你的 .md 原稿</strong>。建议将整个博客文件夹再建立一个私有仓库备份，防止电脑宕机。</p>
+</li>
+</ul>
+</blockquote>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/01/07/github-page/" data-id="cuid1NRWwhaIoiC4LW7hjzonR" data-title="github_page" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/01/07/github-page/" data-id="cuidizrcbvoc0J4u6Xlkci3Yy" data-title="github_page" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-hello-world" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/01/07/hello-world/" class="article-date">
+  <time class="dt-published" datetime="2026-01-07T03:22:54.833Z" itemprop="datePublished">2026-01-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2026/01/07/hello-world/">Hello World</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/01/07/hello-world/" data-id="cuidp5trwT5lskS2VtfCgiFBe" data-title="Hello World" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -193,6 +291,10 @@
         
           <li>
             <a href="/2026/01/07/github-page/">github_page</a>
+          </li>
+        
+          <li>
+            <a href="/2026/01/07/hello-world/">Hello World</a>
           </li>
         
       </ul>
