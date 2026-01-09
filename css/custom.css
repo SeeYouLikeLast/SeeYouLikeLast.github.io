@@ -1,0 +1,55 @@
+/* 1. 实现背景图连贯且固定，滚动时不位移 */
+#web_bg {
+  background-attachment: fixed !important;
+  background-size: cover !important;
+  background-position: center !important;
+}
+
+/* 2. 让页眉（Header）透明，使其与全局背景融为一体 */
+#page-header {
+  background: transparent !important;
+}
+
+/* 3. 页脚透明化：让页脚露出底层的全局背景图 (解决您的问题) */
+#footer {
+  background: transparent !important; /* 设为透明 */
+  background-image: none !important;  /* 移除可能的默认图片 */
+}
+
+/* 1. 提高内容卡片和侧边栏的不透明度，并增加毛玻璃效果 */
+#aside-content .card-widget,
+.recent-post-item,
+#content-inner #page,
+#content-inner #post {
+  background: rgba(255, 255, 255, 0.9) !important; /* 将 0.8 改为 0.9，颜色更实 */
+  backdrop-filter: blur(10px); /* 增加背景模糊，让文字更突出 */
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 12px; /* 可选：增加圆角让视觉更柔和 */
+}
+
+/* 1. 为页脚增加一个半透明遮罩，让底图变暗，文字自然就显现了 */
+#footer {
+  /* 增加一个从下往上的渐变遮罩，顶部透明，底部带一点黑色 */
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.4) 100%) !important;
+}
+
+/* 2. 强制修改页脚所有文字颜色为白色，并增加文字阴影 */
+#footer, #footer a, .footer-separator {
+  color: #ffffff !important; /* 强制白色 */
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8) !important; /* 黑色阴影增强对比 */
+  font-weight: 500; /* 稍微加粗一点点 */
+}
+
+/* 3. 悬停在链接上时稍微改变颜色或亮度，保持交互感 */
+#footer a:hover {
+  color: #49b1f5 !important; /* 悬停变为主题蓝色，也可改为您喜欢的颜色 */
+}
+
+/* 2. 如果是黑夜模式，调整对应的深色背景 */
+[data-theme='dark'] #aside-content .card-widget,
+[data-theme='dark'] .recent-post-item,
+[data-theme='dark'] #content-inner #page,
+[data-theme='dark'] #post {
+  background: rgba(20, 20, 20, 0.85) !important;
+  backdrop-filter: blur(10px);
+}
