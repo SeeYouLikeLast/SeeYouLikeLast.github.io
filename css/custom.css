@@ -17,14 +17,26 @@
 }
 
 /* 1. 提高内容卡片和侧边栏的不透明度，并增加毛玻璃效果 */
-#aside-content .card-widget,
-.recent-post-item,
-#content-inner #page,
-#content-inner #post {
-  background: rgba(255, 255, 255, 0.9) !important; /* 将 0.8 改为 0.9，颜色更实 */
-  backdrop-filter: blur(10px); /* 增加背景模糊，让文字更突出 */
+
+
+/* 亮色模式下的背景 */
+[data-theme='light'] #aside-content .card-widget,
+[data-theme='light'] .recent-post-item,
+[data-theme='light'] #content-inner #page,
+[data-theme='light'] #content-inner #post {
+  background: rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border-radius: 12px; /* 可选：增加圆角让视觉更柔和 */
+}
+
+/* 黑夜模式下的背景 */
+[data-theme='dark'] #aside-content .card-widget,
+[data-theme='dark'] .recent-post-item,
+[data-theme='dark'] #content-inner #page,
+[data-theme='dark'] #content-inner #post {
+  background: rgba(20, 20, 20, 0.7) !important; /* 使用深色透明背景 */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 /* 1. 为页脚增加一个半透明遮罩，让底图变暗，文字自然就显现了 */
