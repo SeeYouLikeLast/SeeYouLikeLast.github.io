@@ -45,11 +45,17 @@
   color: #49b1f5 !important; /* 悬停变为主题蓝色，也可改为您喜欢的颜色 */
 }
 
-/* 2. 如果是黑夜模式，调整对应的深色背景 */
+/*  2. 如果是黑夜模式，调整对应的深色背景 */
 [data-theme='dark'] #aside-content .card-widget,
 [data-theme='dark'] .recent-post-item,
 [data-theme='dark'] #content-inner #page,
 [data-theme='dark'] #post {
   background: rgba(20, 20, 20, 0.85) !important;
   backdrop-filter: blur(10px);
+} 
+[data-theme='dark'] #post, 
+[data-theme='dark'] #post .post-content,
+[data-theme='dark'] #post h1, 
+[data-theme='dark'] #post h2 {
+  color: #eeeeee !important; /* 强制文字为浅色 */
 }
