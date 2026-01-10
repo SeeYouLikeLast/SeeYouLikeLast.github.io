@@ -17,8 +17,6 @@
 }
 
 /* 1. 提高内容卡片和侧边栏的不透明度，并增加毛玻璃效果 */
-
-
 /* 亮色模式下的背景 */
 [data-theme='light'] #aside-content .card-widget,
 [data-theme='light'] .recent-post-item,
