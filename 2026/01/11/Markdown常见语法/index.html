@@ -1,0 +1,270 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Markdown学习 | SeeYouLikeLast</title><meta name="author" content="Yixun_Liu"><meta name="copyright" content="Yixun_Liu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="1. 基础文本样式   样式 语法 示例    加粗 **文本** 或 __文本__ 这里是加粗文字   斜体 *文本* 或 _文本_ 这里是斜体文字   粗斜体 ***文本*** 这里是粗斜体   删除线 ~~文本~~ 这段内容已过时   行内代码 &#96;代码&#96; 使用 print() 函数    2. 多级标题使用 # 号来表示标题，# 的数量代表标题的级别（最多支持六级）。 Markdown 12">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Markdown学习">
+<meta property="og:url" content="https://seeyoulikelast.github.io/2026/01/11/Markdown%E5%B8%B8%E8%A7%81%E8%AF%AD%E6%B3%95/index.html">
+<meta property="og:site_name" content="SeeYouLikeLast">
+<meta property="og:description" content="1. 基础文本样式   样式 语法 示例    加粗 **文本** 或 __文本__ 这里是加粗文字   斜体 *文本* 或 _文本_ 这里是斜体文字   粗斜体 ***文本*** 这里是粗斜体   删除线 ~~文本~~ 这段内容已过时   行内代码 &#96;代码&#96; 使用 print() 函数    2. 多级标题使用 # 号来表示标题，# 的数量代表标题的级别（最多支持六级）。 Markdown 12">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://seeyoulikelast.github.io/img/avatar.jpg">
+<meta property="article:published_time" content="2026-01-10T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-01-12T13:04:07.399Z">
+<meta property="article:author" content="Yixun_Liu">
+<meta property="article:tag" content="Markdown">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://seeyoulikelast.github.io/img/avatar.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Markdown学习",
+  "url": "https://seeyoulikelast.github.io/2026/01/11/Markdown%E5%B8%B8%E8%A7%81%E8%AF%AD%E6%B3%95/",
+  "image": "https://seeyoulikelast.github.io/img/avatar.jpg",
+  "datePublished": "2026-01-10T16:00:00.000Z",
+  "dateModified": "2026-01-12T13:04:07.399Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Yixun_Liu",
+      "url": "https://SeeYouLikeLast.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://seeyoulikelast.github.io/2026/01/11/Markdown%E5%B8%B8%E8%A7%81%E8%AF%AD%E6%B3%95/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.3"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Markdown学习',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 8.1.1"></head><body><div class="bg-animation" id="web_bg" style="background-image: url(/img/my_blog.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">4</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">SeeYouLikeLast</span></a><a class="nav-page-title" href="/"><span class="site-name">Markdown学习</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Markdown学习</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-01-10T16:00:00.000Z" title="发表于 2026-01-11 00:00:00">2026-01-11</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-01-12T13:04:07.399Z" title="更新于 2026-01-12 21:04:07">2026-01-12</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%B8%B8%E7%94%A8%E5%8A%9F%E8%83%BD/">常用功能</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="1-基础文本样式"><a href="#1-基础文本样式" class="headerlink" title="1. 基础文本样式"></a>1. 基础文本样式</h2><table>
+<thead>
+<tr>
+<th><strong>样式</strong></th>
+<th><strong>语法</strong></th>
+<th><strong>示例</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>加粗</strong></td>
+<td><code>**文本**</code> 或 <code>__文本__</code></td>
+<td><strong>这里是加粗文字</strong></td>
+</tr>
+<tr>
+<td><em>斜体</em></td>
+<td><code>*文本*</code> 或 <code>_文本_</code></td>
+<td><em>这里是斜体文字</em></td>
+</tr>
+<tr>
+<td><strong><em>粗斜体</em></strong></td>
+<td><code>***文本***</code></td>
+<td><strong><em>这里是粗斜体</em></strong></td>
+</tr>
+<tr>
+<td><del>删除线</del></td>
+<td><code>~~文本~~</code></td>
+<td><del>这段内容已过时</del></td>
+</tr>
+<tr>
+<td>行内代码</td>
+<td><code>`代码`</code></td>
+<td>使用 <code>print()</code> 函数</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="2-多级标题"><a href="#2-多级标题" class="headerlink" title="2. 多级标题"></a>2. 多级标题</h2><p>使用 <code>#</code> 号来表示标题，<code>#</code> 的数量代表标题的级别（最多支持六级）。</p>
+<p>Markdown</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 一级标题</span><br><span class="line">## 二级标题</span><br><span class="line">### 三级标题</span><br><span class="line">#### 四级标题</span><br><span class="line">##### 五级标题</span><br><span class="line">###### 六级标题</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="3-列表（Lists）"><a href="#3-列表（Lists）" class="headerlink" title="3. 列表（Lists）"></a>3. 列表（Lists）</h2><h3 id="无序列表"><a href="#无序列表" class="headerlink" title="无序列表"></a>无序列表</h3><p>使用 <code>-</code>、<code>+</code> 或 <code>*</code> 加上空格。</p>
+<ul>
+<li><p>项目 A</p>
+</li>
+<li><p>项目 B</p>
+<ul>
+<li>子项目 B1</li>
+</ul>
+</li>
+</ul>
+<h3 id="有序列表"><a href="#有序列表" class="headerlink" title="有序列表"></a>有序列表</h3><p>使用数字加点 <code>1.</code> 加上空格。</p>
+<ol>
+<li><p>第一步</p>
+</li>
+<li><p>第二步</p>
+</li>
+<li><p>第三步</p>
+</li>
+</ol>
+<h3 id="任务列表-Checklist"><a href="#任务列表-Checklist" class="headerlink" title="任务列表 (Checklist)"></a>任务列表 (Checklist)</h3><ul>
+<li><p><input checked="" disabled="" type="checkbox"> 
+已完成任务</p>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+待完成任务</p>
+</li>
+</ul>
+<hr>
+<h2 id="4-引用与分割线"><a href="#4-引用与分割线" class="headerlink" title="4. 引用与分割线"></a>4. 引用与分割线</h2><h3 id="引用块"><a href="#引用块" class="headerlink" title="引用块"></a>引用块</h3><p>使用 <code>&gt;</code> 符号。</p>
+<blockquote>
+<p>这是一个引用示例。</p>
+<blockquote>
+<p>甚至可以嵌套引用。</p>
+</blockquote>
+</blockquote>
+<h3 id="分割线"><a href="#分割线" class="headerlink" title="分割线"></a>分割线</h3><p> 使用三个或更多的 <code>---</code>、<code>***</code> 或 <code>___</code>。</p>
+<hr>
+<h2 id="5-链接与图片"><a href="#5-链接与图片" class="headerlink" title="5. 链接与图片"></a>5. 链接与图片</h2><ul>
+<li><p><strong>超链接</strong>：<code>[链接文字](URL &quot;可选标题&quot;)</code></p>
+<ul>
+<li>例如：<a target="_blank" rel="noopener" href="https://www.baidu.com/">百度</a></li>
+</ul>
+</li>
+<li><p><strong>图片</strong>：<code>![替代文字](图片链接 &quot;可选标题&quot;)</code></p>
+<ul>
+<li>例如：<code>![示例图片](https://example.com/image.png)</code></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="6-代码块"><a href="#6-代码块" class="headerlink" title="6. 代码块"></a>6. 代码块</h2><p>如果是多行代码，使用三个反引号 <code>```</code> 包围，并可以指定语言进行语法高亮。</p>
+<p>Python</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">def hello_world():</span><br><span class="line">    print(&quot;Hello, Markdown!&quot;)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="7-表格"><a href="#7-表格" class="headerlink" title="7. 表格"></a>7. 表格</h2><p>使用 <code>|</code> 分隔列，使用 <code>-</code> 分隔表头和内容，可以使用 <code>:</code> 设置对齐方式。</p>
+<p>Markdown</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">| 左对齐 | 居中对齐 | 右对齐 |</span><br><span class="line">| :--- | :----: | ---: |</span><br><span class="line">| 单元格 | 单元格 | 单元格 |</span><br><span class="line">| 内容 | 内容 | 内容 |</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="8-数学公式-LaTeX"><a href="#8-数学公式-LaTeX" class="headerlink" title="8. 数学公式 (LaTeX)"></a>8. 数学公式 (LaTeX)</h2><p>Markdown 常配合 LaTeX 渲染数学公式：</p>
+<ul>
+<li><p><strong>行内公式</strong>：使用 <code>$E=mc^2$</code> $\rightarrow$ $E&#x3D;mc^2$</p>
+</li>
+<li><p><strong>块级公式</strong>：</p>
+</li>
+</ul>
+<p>$$\frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$$</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://SeeYouLikeLast.github.io">Yixun_Liu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://seeyoulikelast.github.io/2026/01/11/Markdown%E5%B8%B8%E8%A7%81%E8%AF%AD%E6%B3%95/">https://seeyoulikelast.github.io/2026/01/11/Markdown%E5%B8%B8%E8%A7%81%E8%AF%AD%E6%B3%95/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://SeeYouLikeLast.github.io" target="_blank">SeeYouLikeLast</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Markdown/">Markdown</a></div><div class="post-share"><div class="social-share" data-image="/img/avatar.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2026/01/11/Workflow%E5%BA%93%E6%96%87%E4%BB%B6%E5%AD%A6%E4%B9%A0/" title="Workflow库文件学习"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Workflow库文件学习</div></div><div class="info-2"><div class="info-item-1">项目资源链接 Workflow 官方项目：workflow 个人 Workflow 项目 (Gateway)：workflow-gateway   根基类 (Kernel Core) SubTask  所有任务的基类。定义了 dispatch() (开始执行) 和 done() (完成回调) 接口。    五大派生类 (Kernel Request Layer)Workflow 在内核层将任务分为了 5 种基本行为模式：  CommRequest (通信任务)  用于网络通信。  派生类: WFNetworkTask&lt;REQ, RESP&gt; (所有网络任务的基类，如 HTTP, Redis, MySQL 等任务)。    ExecRequest (计算任务)  用于线程池计算。  派生类:  WFThreadTask&lt;INPUT, OUTPUT&gt;: 通用计算任务。  WFGoTask: 类似 Go 语言协程的简单计算任务。  WFSortTask, WFMergeTask 等: 在 WFAlgoTaskFactory.h 中定义，它们本质上是 WFThrea...</div></div></div></a><a class="pagination-related" href="/2026/01/07/%E4%B8%8A%E4%BC%A0%E9%A1%B9%E7%9B%AE/" title="github上传项目"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">github上传项目</div></div><div class="info-2"><div class="info-item-1">第一步：在 GitHub 上创建新仓库 登录 GitHub。  点击右上角的 + 号 -&gt; New repository。  输入仓库名称（例如 workflow-gateway）。  不要勾选 “Initialize this repository with a README”（保持仓库为空）。  点击 Create repository。  复制屏幕上显示的 HTTPS 或 SSH 地址（例如 https://github.com/你的用户名/workflow-gateway.git）。   第二步：清理并初始化本地仓库打开终端，进入你的源代码根目录（也就是包含 CMakeLists.txt 的那一层）： 12345# 1. 进入项目目录 (根据你的实际路径调整)cd ~/cpp58/gateway/gateway# 2. 初始化 Git 仓库git init  第三步：创建 .gitignore 文件 (关键!)我们需要告诉 Git 忽略掉 build 文件夹和编译出来的二进制文件。 在终端中执行以下命令创建忽略规则： 123456789101112131415161...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Yixun_Liu</div><div class="author-info-description">码行千里，积于跬步。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">4</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/seeyoulikelast"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/SeeYouLikeLast" target="_blank" title="GitHub"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xidian_yixunliu@163.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%9F%BA%E7%A1%80%E6%96%87%E6%9C%AC%E6%A0%B7%E5%BC%8F"><span class="toc-number">1.</span> <span class="toc-text">1. 基础文本样式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%A4%9A%E7%BA%A7%E6%A0%87%E9%A2%98"><span class="toc-number">2.</span> <span class="toc-text">2. 多级标题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%88%97%E8%A1%A8%EF%BC%88Lists%EF%BC%89"><span class="toc-number">3.</span> <span class="toc-text">3. 列表（Lists）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%A0%E5%BA%8F%E5%88%97%E8%A1%A8"><span class="toc-number">3.1.</span> <span class="toc-text">无序列表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%89%E5%BA%8F%E5%88%97%E8%A1%A8"><span class="toc-number">3.2.</span> <span class="toc-text">有序列表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%BB%E5%8A%A1%E5%88%97%E8%A1%A8-Checklist"><span class="toc-number">3.3.</span> <span class="toc-text">任务列表 (Checklist)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E5%BC%95%E7%94%A8%E4%B8%8E%E5%88%86%E5%89%B2%E7%BA%BF"><span class="toc-number">4.</span> <span class="toc-text">4. 引用与分割线</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%95%E7%94%A8%E5%9D%97"><span class="toc-number">4.1.</span> <span class="toc-text">引用块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E5%89%B2%E7%BA%BF"><span class="toc-number">4.2.</span> <span class="toc-text">分割线</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E9%93%BE%E6%8E%A5%E4%B8%8E%E5%9B%BE%E7%89%87"><span class="toc-number">5.</span> <span class="toc-text">5. 链接与图片</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E4%BB%A3%E7%A0%81%E5%9D%97"><span class="toc-number">6.</span> <span class="toc-text">6. 代码块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-%E8%A1%A8%E6%A0%BC"><span class="toc-number">7.</span> <span class="toc-text">7. 表格</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-%E6%95%B0%E5%AD%A6%E5%85%AC%E5%BC%8F-LaTeX"><span class="toc-number">8.</span> <span class="toc-text">8. 数学公式 (LaTeX)</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/11/Markdown%E5%B8%B8%E8%A7%81%E8%AF%AD%E6%B3%95/" title="Markdown学习">Markdown学习</a><time datetime="2026-01-10T16:00:00.000Z" title="发表于 2026-01-11 00:00:00">2026-01-11</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/11/Workflow%E5%BA%93%E6%96%87%E4%BB%B6%E5%AD%A6%E4%B9%A0/" title="Workflow库文件学习">Workflow库文件学习</a><time datetime="2026-01-10T16:00:00.000Z" title="发表于 2026-01-11 00:00:00">2026-01-11</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/07/Github_page/" title="Github_page">Github_page</a><time datetime="2026-01-06T16:00:00.000Z" title="发表于 2026-01-07 00:00:00">2026-01-07</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/07/%E4%B8%8A%E4%BC%A0%E9%A1%B9%E7%9B%AE/" title="github上传项目">github上传项目</a><time datetime="2026-01-06T16:00:00.000Z" title="发表于 2026-01-07 00:00:00">2026-01-07</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By Yixun_Liu</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.1</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.3</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.3"></script><script src="/js/main.js?v=5.5.3"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

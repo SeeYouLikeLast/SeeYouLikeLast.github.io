@@ -179,93 +179,129 @@ hexo cleanhexo ghexo s
 
 ]]></content>
       <categories>
-        <category>学习笔记</category>
+        <category>常用功能</category>
       </categories>
       <tags>
         <tag>Github</tag>
       </tags>
   </entry>
   <entry>
-    <title>github上传项目</title>
-    <url>/2026/01/07/%E4%B8%8A%E4%BC%A0%E9%A1%B9%E7%9B%AE/</url>
-    <content><![CDATA[第一步：在 GitHub 上创建新仓库
-登录 GitHub。
-
-点击右上角的 + 号 -&gt; New repository。
-
-输入仓库名称（例如 workflow-gateway）。
-
-不要勾选 “Initialize this repository with a README”（保持仓库为空）。
-
-点击 Create repository。
-
-复制屏幕上显示的 HTTPS 或 SSH 地址（例如 https://github.com/你的用户名/workflow-gateway.git）。
+    <title>Markdown学习</title>
+    <url>/2026/01/11/Markdown%E5%B8%B8%E8%A7%81%E8%AF%AD%E6%B3%95/</url>
+    <content><![CDATA[1. 基础文本样式
 
 
-第二步：清理并初始化本地仓库打开终端，进入你的源代码根目录（也就是包含 CMakeLists.txt 的那一层）：
-# 1. 进入项目目录 (根据你的实际路径调整)cd ~/cpp58/gateway/gateway# 2. 初始化 Git 仓库git init
-
-第三步：创建 .gitignore 文件 (关键!)我们需要告诉 Git 忽略掉 build 文件夹和编译出来的二进制文件。 在终端中执行以下命令创建忽略规则：
-# 创建 .gitignore 文件cat &lt;&lt;EOF &gt; .gitignore# 忽略编译生成的目录build/cmake-build-debug/# 忽略可执行文件gatewayserver/servertest/benchmark# 忽略临时对象文件*.o*.d*.a*.so# 忽略 IDE 配置 (可选).vscode/.idea/.DS_StoreEOF
-
-第四步：提交代码到本地现在将剩下的源代码文件添加到暂存区并提交：
-# 1. 添加当前目录下所有文件 (Git 会自动遵守 .gitignore 的规则)git add .# 2. 检查一下状态，确保 build 目录没有被添加进去git status# (你应该看到 new file: src/..., config/... 等，但不应该看到 build/...)# 3. 提交git commit -m &quot;Initial commit: Workflow Gateway v1.0&quot;
-
-第五步：推送到 GitHub将本地仓库与刚才在 GitHub 上创建的远程仓库关联，并推送代码：
-# 1. 将分支重命名为 main (现在的标准做法)git branch -M main# 2. 关联远程仓库 (替换为你自己的 GitHub 地址)git remote add origin https://github.com/你的用户名/workflow-gateway.git# 3. 推送代码git push -u origin main
-
-常见问题解决
-如果你之前已经不小心把 build 提交了： 执行以下命令将其从 Git 记录中删除（但不删除本地文件）：
- Bash
- git rm -r --cached buildgit commit -m &quot;Stop tracking build directory&quot;git push
-
-密码验证问题： 自 2021 年起，GitHub 命令行不再支持密码验证。如果你在 git push 时被询问密码：
-
-用户名：输入你的 GitHub 用户名。
-
-密码：必须输入 Personal Access Token (PAT)。
-
-去 GitHub 设置 -&gt; Developer settings -&gt; Personal access tokens -&gt; Tokens (classic) -&gt; Generate new token -&gt; 勾选 repo 权限 -&gt; 生成并复制那个以 ghp_ 开头的字符串作为密码。
-
-
-或者，如果你配置了 SSH Key，建议使用 SSH 地址 (git@github.com:...) 代替 HTTPS 地址。
+样式
+语法
+示例
 
 
 
-重新生成 Token (一定要选 Classic)
-
-登录 GitHub，点击右上角头像 -&gt; Settings。
-
-
-在左侧最底部找到 Developer settings。
-
-点击 Personal access tokens -&gt; 选择 Tokens (classic) (不要选 Fine-grained)。
-
-点击 Generate new token -&gt; Generate new token (classic)。
-
-【关键步骤】：
-
-Note: 随便填（比如 gateway-push）。
-
-Expiration: 建议选 No expiration（永不过期，或者是 30 天）。
-
-Select scopes: 一定要勾选第一个 repo 复选框（这包含了对仓库的所有读写权限）。
+加粗
+**文本** 或 __文本__
+这里是加粗文字
 
 
+斜体
+*文本* 或 _文本_
+这里是斜体文字
 
-点击底部的 Generate token。
 
-复制那个以 ghp_ 开头的字符串。
+粗斜体
+***文本***
+这里是粗斜体
 
+
+删除线
+~~文本~~
+这段内容已过时
+
+
+行内代码
+`代码`
+使用 print() 函数
 
 
 
+2. 多级标题使用 # 号来表示标题，# 的数量代表标题的级别（最多支持六级）。
+Markdown
+# 一级标题## 二级标题### 三级标题#### 四级标题##### 五级标题###### 六级标题
+
+
+3. 列表（Lists）无序列表使用 -、+ 或 * 加上空格。
+
+项目 A
+
+项目 B
+
+子项目 B1
+
+
+
+有序列表使用数字加点 1. 加上空格。
+
+第一步
+
+第二步
+
+第三步
+
+
+任务列表 (Checklist)
+ 
+已完成任务
+
+ 
+待完成任务
+
+
+
+4. 引用与分割线引用块使用 &gt; 符号。
+
+这是一个引用示例。
+
+甚至可以嵌套引用。
+
+
+分割线 使用三个或更多的 ---、*** 或 ___。
+
+5. 链接与图片
+超链接：[链接文字](URL &quot;可选标题&quot;)
+
+例如：百度
+
+
+图片：![替代文字](图片链接 &quot;可选标题&quot;)
+
+例如：![示例图片](https://example.com/image.png)
+
+
+
+
+6. 代码块如果是多行代码，使用三个反引号 ``` 包围，并可以指定语言进行语法高亮。
+Python
+def hello_world():    print(&quot;Hello, Markdown!&quot;)
+
+
+7. 表格使用 | 分隔列，使用 - 分隔表头和内容，可以使用 : 设置对齐方式。
+Markdown
+| 左对齐 | 居中对齐 | 右对齐 || :--- | :----: | ---: || 单元格 | 单元格 | 单元格 || 内容 | 内容 | 内容 |
+
+
+8. 数学公式 (LaTeX)Markdown 常配合 LaTeX 渲染数学公式：
+
+行内公式：使用 $E=mc^2$ $\rightarrow$ $E&#x3D;mc^2$
+
+块级公式：
+
+
+$$\frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$$
 ]]></content>
       <categories>
-        <category>学习笔记</category>
+        <category>常用功能</category>
       </categories>
       <tags>
-        <tag>Github</tag>
+        <tag>Markdown</tag>
       </tags>
   </entry>
   <entry>
@@ -778,6 +814,89 @@ C 语言极致优化：完全基于指针操作和内存偏移，几乎没有多
       </categories>
       <tags>
         <tag>Workflow</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>github上传项目</title>
+    <url>/2026/01/07/%E4%B8%8A%E4%BC%A0%E9%A1%B9%E7%9B%AE/</url>
+    <content><![CDATA[第一步：在 GitHub 上创建新仓库
+登录 GitHub。
+
+点击右上角的 + 号 -&gt; New repository。
+
+输入仓库名称（例如 workflow-gateway）。
+
+不要勾选 “Initialize this repository with a README”（保持仓库为空）。
+
+点击 Create repository。
+
+复制屏幕上显示的 HTTPS 或 SSH 地址（例如 https://github.com/你的用户名/workflow-gateway.git）。
+
+
+第二步：清理并初始化本地仓库打开终端，进入你的源代码根目录（也就是包含 CMakeLists.txt 的那一层）：
+# 1. 进入项目目录 (根据你的实际路径调整)cd ~/cpp58/gateway/gateway# 2. 初始化 Git 仓库git init
+
+第三步：创建 .gitignore 文件 (关键!)我们需要告诉 Git 忽略掉 build 文件夹和编译出来的二进制文件。 在终端中执行以下命令创建忽略规则：
+# 创建 .gitignore 文件cat &lt;&lt;EOF &gt; .gitignore# 忽略编译生成的目录build/cmake-build-debug/# 忽略可执行文件gatewayserver/servertest/benchmark# 忽略临时对象文件*.o*.d*.a*.so# 忽略 IDE 配置 (可选).vscode/.idea/.DS_StoreEOF
+
+第四步：提交代码到本地现在将剩下的源代码文件添加到暂存区并提交：
+# 1. 添加当前目录下所有文件 (Git 会自动遵守 .gitignore 的规则)git add .# 2. 检查一下状态，确保 build 目录没有被添加进去git status# (你应该看到 new file: src/..., config/... 等，但不应该看到 build/...)# 3. 提交git commit -m &quot;Initial commit: Workflow Gateway v1.0&quot;
+
+第五步：推送到 GitHub将本地仓库与刚才在 GitHub 上创建的远程仓库关联，并推送代码：
+# 1. 将分支重命名为 main (现在的标准做法)git branch -M main# 2. 关联远程仓库 (替换为你自己的 GitHub 地址)git remote add origin https://github.com/你的用户名/workflow-gateway.git# 3. 推送代码git push -u origin main
+
+常见问题解决
+如果你之前已经不小心把 build 提交了： 执行以下命令将其从 Git 记录中删除（但不删除本地文件）：
+ Bash
+ git rm -r --cached buildgit commit -m &quot;Stop tracking build directory&quot;git push
+
+密码验证问题： 自 2021 年起，GitHub 命令行不再支持密码验证。如果你在 git push 时被询问密码：
+
+用户名：输入你的 GitHub 用户名。
+
+密码：必须输入 Personal Access Token (PAT)。
+
+去 GitHub 设置 -&gt; Developer settings -&gt; Personal access tokens -&gt; Tokens (classic) -&gt; Generate new token -&gt; 勾选 repo 权限 -&gt; 生成并复制那个以 ghp_ 开头的字符串作为密码。
+
+
+或者，如果你配置了 SSH Key，建议使用 SSH 地址 (git@github.com:...) 代替 HTTPS 地址。
+
+
+
+重新生成 Token (一定要选 Classic)
+
+登录 GitHub，点击右上角头像 -&gt; Settings。
+
+
+在左侧最底部找到 Developer settings。
+
+点击 Personal access tokens -&gt; 选择 Tokens (classic) (不要选 Fine-grained)。
+
+点击 Generate new token -&gt; Generate new token (classic)。
+
+【关键步骤】：
+
+Note: 随便填（比如 gateway-push）。
+
+Expiration: 建议选 No expiration（永不过期，或者是 30 天）。
+
+Select scopes: 一定要勾选第一个 repo 复选框（这包含了对仓库的所有读写权限）。
+
+
+
+点击底部的 Generate token。
+
+复制那个以 ghp_ 开头的字符串。
+
+
+
+
+]]></content>
+      <categories>
+        <category>常用功能</category>
+      </categories>
+      <tags>
+        <tag>Github</tag>
       </tags>
   </entry>
 </search>
