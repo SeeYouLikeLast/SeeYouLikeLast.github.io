@@ -186,125 +186,6 @@ hexo cleanhexo ghexo s
       </tags>
   </entry>
   <entry>
-    <title>Markdown学习</title>
-    <url>/2026/01/11/Markdown%E5%B8%B8%E8%A7%81%E8%AF%AD%E6%B3%95/</url>
-    <content><![CDATA[1. 基础文本样式
-
-
-样式
-语法
-示例
-
-
-
-加粗
-**文本** 或 __文本__
-这里是加粗文字
-
-
-斜体
-*文本* 或 _文本_
-这里是斜体文字
-
-
-粗斜体
-***文本***
-这里是粗斜体
-
-
-删除线
-~~文本~~
-这段内容已过时
-
-
-行内代码
-`代码`
-使用 print() 函数
-
-
-
-2. 多级标题使用 # 号来表示标题，# 的数量代表标题的级别（最多支持六级）。
-Markdown
-# 一级标题## 二级标题### 三级标题#### 四级标题##### 五级标题###### 六级标题
-
-
-3. 列表（Lists）无序列表使用 -、+ 或 * 加上空格。
-
-项目 A
-
-项目 B
-
-子项目 B1
-
-
-
-有序列表使用数字加点 1. 加上空格。
-
-第一步
-
-第二步
-
-第三步
-
-
-任务列表 (Checklist)
- 
-已完成任务
-
- 
-待完成任务
-
-
-
-4. 引用与分割线引用块使用 &gt; 符号。
-
-这是一个引用示例。
-
-甚至可以嵌套引用。
-
-
-分割线 使用三个或更多的 ---、*** 或 ___。
-
-5. 链接与图片
-超链接：[链接文字](URL &quot;可选标题&quot;)
-
-例如：百度
-
-
-图片：![替代文字](图片链接 &quot;可选标题&quot;)
-
-例如：![示例图片](https://example.com/image.png)
-
-
-
-
-6. 代码块如果是多行代码，使用三个反引号 ``` 包围，并可以指定语言进行语法高亮。
-Python
-def hello_world():    print(&quot;Hello, Markdown!&quot;)
-
-
-7. 表格使用 | 分隔列，使用 - 分隔表头和内容，可以使用 : 设置对齐方式。
-Markdown
-| 左对齐 | 居中对齐 | 右对齐 || :--- | :----: | ---: || 单元格 | 单元格 | 单元格 || 内容 | 内容 | 内容 |
-
-
-8. 数学公式 (LaTeX)Markdown 常配合 LaTeX 渲染数学公式：
-
-行内公式：使用 $E=mc^2$ $\rightarrow$ $E&#x3D;mc^2$
-
-块级公式：
-
-
-$$\frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$$
-]]></content>
-      <categories>
-        <category>常用功能</category>
-      </categories>
-      <tags>
-        <tag>Markdown</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Workflow库文件学习</title>
     <url>/2026/01/11/Workflow%E5%BA%93%E6%96%87%E4%BB%B6%E5%AD%A6%E4%B9%A0/</url>
     <content><![CDATA[项目资源链接
@@ -817,6 +698,125 @@ C 语言极致优化：完全基于指针操作和内存偏移，几乎没有多
       </tags>
   </entry>
   <entry>
+    <title>Markdown学习</title>
+    <url>/2026/01/11/Markdown%E5%B8%B8%E8%A7%81%E8%AF%AD%E6%B3%95/</url>
+    <content><![CDATA[1. 基础文本样式
+
+
+样式
+语法
+示例
+
+
+
+加粗
+**文本** 或 __文本__
+这里是加粗文字
+
+
+斜体
+*文本* 或 _文本_
+这里是斜体文字
+
+
+粗斜体
+***文本***
+这里是粗斜体
+
+
+删除线
+~~文本~~
+这段内容已过时
+
+
+行内代码
+`代码`
+使用 print() 函数
+
+
+
+2. 多级标题使用 # 号来表示标题，# 的数量代表标题的级别（最多支持六级）。
+Markdown
+# 一级标题## 二级标题### 三级标题#### 四级标题##### 五级标题###### 六级标题
+
+
+3. 列表（Lists）无序列表使用 -、+ 或 * 加上空格。
+
+项目 A
+
+项目 B
+
+子项目 B1
+
+
+
+有序列表使用数字加点 1. 加上空格。
+
+第一步
+
+第二步
+
+第三步
+
+
+任务列表 (Checklist)
+ 
+已完成任务
+
+ 
+待完成任务
+
+
+
+4. 引用与分割线引用块使用 &gt; 符号。
+
+这是一个引用示例。
+
+甚至可以嵌套引用。
+
+
+分割线 使用三个或更多的 ---、*** 或 ___。
+
+5. 链接与图片
+超链接：[链接文字](URL &quot;可选标题&quot;)
+
+例如：百度
+
+
+图片：![替代文字](图片链接 &quot;可选标题&quot;)
+
+例如：![示例图片](https://example.com/image.png)
+
+
+
+
+6. 代码块如果是多行代码，使用三个反引号 ``` 包围，并可以指定语言进行语法高亮。
+Python
+def hello_world():    print(&quot;Hello, Markdown!&quot;)
+
+
+7. 表格使用 | 分隔列，使用 - 分隔表头和内容，可以使用 : 设置对齐方式。
+Markdown
+| 左对齐 | 居中对齐 | 右对齐 || :--- | :----: | ---: || 单元格 | 单元格 | 单元格 || 内容 | 内容 | 内容 |
+
+
+8. 数学公式 (LaTeX)Markdown 常配合 LaTeX 渲染数学公式：
+
+行内公式：使用 $E=mc^2$ $\rightarrow$ $E&#x3D;mc^2$
+
+块级公式：
+
+
+$$\frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$$
+]]></content>
+      <categories>
+        <category>常用功能</category>
+      </categories>
+      <tags>
+        <tag>Markdown</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>github上传项目</title>
     <url>/2026/01/07/%E4%B8%8A%E4%BC%A0%E9%A1%B9%E7%9B%AE/</url>
     <content><![CDATA[第一步：在 GitHub 上创建新仓库
@@ -897,6 +897,204 @@ Select scopes: 一定要勾选第一个 repo 复选框（这包含了对仓库�
       </categories>
       <tags>
         <tag>Github</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>阿里云 ECS + Frp + VSCode Remote-SSH 远程开发全指南</title>
+    <url>/2026/02/25/%E9%98%BF%E9%87%8C%E4%BA%91%20ECS%20+%20Frp%20+%20VSCode%20Remote-SSH%20%E8%BF%9C%E7%A8%8B%E5%BC%80%E5%8F%91%E5%85%A8%E6%8C%87%E5%8D%97/</url>
+    <content><![CDATA[# 阿里云 ECS + Frp + VSCode Remote-SSH 远程开发全指南&gt; [!abstract] 简介&gt; 本文档详细记录了如何利用 **阿里云 ECS** 作为中转服务器，配合 **Frp** 内网穿透工具，实现外网环境下通过 **VSCode Remote-SSH** 访问并开发处于内网（如家中/公司）的高性能主机。&gt; &gt; **核心优势**：&gt; * **低成本**：使用按量付费或特惠 ECS，成本极低。&gt; * **高性能**：利用内网主机的算力（如 GPU），摆脱笔记本性能焦虑。&gt; * **安全性**：通过 STCP 模式或白名单限制，保障内网安全。
+
+🛠️ 1. 准备工作1.1 硬件&#x2F;资源准备
+
+
+角色
+设备描述
+需求
+
+
+
+中转服务器
+阿里云 ECS 实例
+拥有 公网 IP，带宽建议 3M+ (主要影响代码同步速度，不影响终端响应)
+
+
+被控端 (内网)
+家中&#x2F;公司的高性能 PC
+安装 Linux (Ubuntu&#x2F;CentOS) 或 Windows (需启用 OpenSSH Server)，无公网 IP
+
+
+访问端
+随身笔记本 (Win&#x2F;Mac)
+安装 VSCode, OpenSSH 客户端
+
+
+1.2 软件版本说明
+[!WARNING] 注意版本兼容性本教程基于 Frp v0.52.0+ 编写，使用新的 .toml 配置文件格式。旧版本（v0.51 以前）使用 .ini 格式，不通用。
+
+
+☁️ 2. 阿里云 ECS 配置 (服务端)2.1 购买与系统选择
+推荐系统：Ubuntu 20.04&#x2F;22.04 LTS (轻量，社区支持好)。
+计费模式：若仅临时使用，可选择“按量付费”，用完即停机（注意选择“停机不收费”模式）。
+
+2.2 配置安全组 (防火墙) [关键步骤]阿里云默认关闭大部分端口，必须手动放行。
+
+登录阿里云控制台 -&gt; ECS 实例 -&gt; 安全组 -&gt; 配置规则。
+入方向 添加以下规则：
+
+
+
+
+端口范围
+协议
+授权对象
+说明
+
+
+
+22
+TCP
+0.0.0.0&#x2F;0
+用于 SSH 连接 ECS 本身
+
+
+7000
+TCP
+0.0.0.0&#x2F;0
+Frp 服务端通信端口 (Bind Port)
+
+
+7500
+TCP
+0.0.0.0&#x2F;0
+Frp Dashboard 管理面板 (可选)
+
+
+6000
+TCP
+0.0.0.0&#x2F;0
+内网机器 SSH 穿透端口 (用于 VSCode 连接)
+
+
+2.3 安装 Frps (Server)SSH 登录到阿里云 ECS，执行以下命令：
+# 1. 下载 Frp (以 amd64 为例，请去 GitHub Release 页面确认最新版本)wget [https://github.com/fatedier/frp/releases/download/v0.58.1/frp_0.58.1_linux_amd64.tar.gz](https://github.com/fatedier/frp/releases/download/v0.58.1/frp_0.58.1_linux_amd64.tar.gz)# 2. 解压并重命名tar -zxvf frp_0.58.1_linux_amd64.tar.gzsudo mv frp_0.58.1_linux_amd64 /usr/local/frp# 3. 配置文件cd /usr/local/frpsudo vim frps.toml
+
+frps.toml 内容如下：
+Ini, TOML
+# frps.tomlbindPort = 7000           # 服务端与客户端通信端口# 身份验证（一定要设置，防止被白嫖）auth.method = &quot;token&quot;auth.token = &quot;YourStrongPassword123&quot; # Dashboard (可选，用于查看连接状态)webServer.addr = &quot;0.0.0.0&quot;webServer.port = 7500webServer.user = &quot;admin&quot;webServer.password = &quot;admin123&quot;
+
+2.4 设置开机自启 (Systemd)创建服务文件：sudo vim /etc/systemd/system/frps.service
+Ini, TOML
+[Unit]Description=Frp Server ServiceAfter=network.target[Service]Type=simpleUser=rootRestart=on-failureRestartSec=5sExecStart=/usr/local/frp/frps -c /usr/local/frp/frps.toml[Install]WantedBy=multi-user.target
+
+启动并启用服务：
+Bash
+sudo systemctl daemon-reloadsudo systemctl enable frpssudo systemctl start frpssudo systemctl status frps  # 检查状态，应为 Active (running)
+
+
+🏠 3. 内网机器配置 (被控端)3.1 开启 SSH 服务确保内网机器已安装并运行 SSH Server。
+Bash
+sudo apt updatesudo apt install openssh-serversudo systemctl enable sshsudo systemctl start ssh
+
+3.2 安装 Frpc (Client)步骤与服务端类似，下载同版本的 Frp 到内网机器。
+Bash
+# 假设解压到了 /usr/local/frpcd /usr/local/frpsudo vim frpc.toml
+
+frpc.toml 内容如下：
+Ini, TOML
+# frpc.tomlserverAddr = &quot;x.x.x.x&quot;    # 阿里云 ECS 的公网 IPserverPort = 7000         # 对应 frps.toml 中的 bindPortauth.method = &quot;token&quot;auth.token = &quot;YourStrongPassword123&quot; # 必须与服务端一致# 映射 SSH 服务[[proxies]]name = &quot;home-pc-ssh&quot;type = &quot;tcp&quot;localIP = &quot;127.0.0.1&quot;localPort = 22            # 内网机器的 SSH 端口remotePort = 6000         # 阿里云 ECS 上暴露的端口
+
+3.3 设置开机自启创建服务文件：sudo vim /etc/systemd/system/frpc.service
+Ini, TOML
+[Unit]Description=Frp Client ServiceAfter=network.targetWants=network.target[Service]Type=simpleUser=rootRestart=on-failureRestartSec=5sExecStart=/usr/local/frp/frpc -c /usr/local/frp/frpc.toml[Install]WantedBy=multi-user.target
+
+启动服务：
+Bash
+sudo systemctl enable frpcsudo systemctl start frpc
+
+
+[!TIP] 验证 此时，你应该可以通过 ssh -p 6000 内网用户名@阿里云公网IP 连接到内网机器了。如果通了，再进行下一步。
+
+
+💻 4. VSCode Remote-SSH 配置 (访问端)这是实现“像在本地一样开发”的关键步骤。
+4.1 配置 SSH 免密登录 (强烈推荐)为了避免每次打开 VSCode 都要输入密码，建议配置 SSH Key。
+
+在访问端（笔记本）生成密钥（如果已有可跳过）：
+ Bash
+ ssh-keygen -t rsa -b 4096# 一路回车，默认生成在 ~/.ssh/id_rsa
+
+将公钥上传到内网机器： 由于我们已经打通了 Frp，可以直接通过 Frp 端口上传。
+ Bash
+ # 在笔记本终端执行ssh-copy-id -p 6000 内网用户名@阿里云公网IP
+ 如果 Windows 没有 ssh-copy-id，可以手动复制 id_rsa.pub 的内容，粘贴到内网机器的 ~/.ssh/authorized_keys 文件中。
+
+
+4.2 配置 VSCode
+安装插件：Remote - SSH (Microsoft 官方)。
+
+点击左下角绿色图标 -&gt; Open SSH Configuration File -&gt; 选择第一个配置文件（通常是 ~/.ssh/config）。
+
+添加如下配置：
+
+
+代码段
+# 阿里云 ECS 直连 (可选，用于管理 ECS)Host aliyun-ecs    HostName x.x.x.x    User root    Port 22# 内网开发机 (通过 Frp)Host home-pc-dev    HostName x.x.x.x       # 阿里云公网 IP    User your_home_user    # 内网机器的用户名    Port 6000              # Frp 映射的端口    IdentityFile ~/.ssh/id_rsa    ServerAliveInterval 60 # 防止空闲断开
+
+4.3 开始远程开发
+点击 VSCode 左下角绿色图标 -&gt; Connect to Host。
+
+选择 home-pc-dev。
+
+VSCode 会在远程机器安装 Server 端，连接成功后，打开文件夹即为内网机器的文件系统。
+
+
+
+🛡️ 5. 进阶：STCP 模式 (更安全)
+[!NOTE] 为什么需要 STCP? 普通 TCP 模式下，remotePort = 6000 是暴露在公网的，任何人只要知道端口和密码都有可能尝试攻击。STCP (Secret TCP) 模式要求访问端也运行一个 frpc，只有持有密钥的客户端才能连接，不在公网暴露端口。
+
+5.1 修改内网机器 (frpc.toml)Ini, TOML
+[[proxies]]name = &quot;secret-ssh&quot;type = &quot;stcp&quot;secretKey = &quot;SecretKey123&quot; # STCP 专用密钥localIP = &quot;127.0.0.1&quot;localPort = 22
+
+注意：不需要 remotePort。
+5.2 笔记本端安装 Frpc在你的笔记本（访问端）也下载 Frp，配置 frpc-visitor.toml：
+Ini, TOML
+serverAddr = &quot;x.x.x.x&quot;serverPort = 7000auth.token = &quot;YourStrongPassword123&quot;[[visitors]]name = &quot;secret-ssh-visitor&quot;type = &quot;stcp&quot;serverName = &quot;secret-ssh&quot; # 对应内网机器的 proxy namesecretKey = &quot;SecretKey123&quot; # 必须匹配bindAddr = &quot;127.0.0.1&quot;bindPort = 6000           # 映射到笔记本本地的 6000
+
+在笔记本启动 frpc：./frpc -c frpc-visitor.toml
+5.3 修改 SSH Config此时，SSH 连接的目标变成了笔记本本地。
+代码段
+Host home-pc-stcp    HostName 127.0.0.1    User your_home_user    Port 6000    IdentityFile ~/.ssh/id_rsa
+
+
+❓ 常见问题排查 (Troubleshooting)Q1: 连接超时 (Connection Timed Out)
+检查阿里云安全组：确认 7000 和 6000 端口是否已在“入方向”放行。
+
+检查防火墙：ECS 内部防火墙 (ufw status) 或内网机器防火墙是否拦截了端口。
+
+
+Q2: 权限拒绝 (Permission Denied)
+SSH 密钥权限：内网机器的 ~/.ssh 权限应为 700，authorized_keys 权限应为 600。
+
+用户错误：确保 SSH Config 中的 User 是内网机器的用户名，而不是阿里云 ECS 的 root。
+
+
+Q3: VSCode 一直显示 “Installing VS Code Server”
+可能是内网机器无法连接 VSCode 更新服务器。
+
+解决：在内网机器手动下载 VSCode Server，或确保内网机器能访问外网。
+
+
+Q4: 端口被占用
+如果是 ECS 上报错，检查是否有其他进程占用了 6000：sudo lsof -i :6000。
+
+如果是 frpc 报错 “port already used”，说明端口冲突或上一次 frpc 没关干净。
+
+
+]]></content>
+      <categories>
+        <category>服务器</category>
+      </categories>
+      <tags>
+        <tag>科研</tag>
       </tags>
   </entry>
 </search>
