@@ -1,0 +1,291 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Lava代码运行过程 | SeeYouLikeLast</title><meta name="author" content="Yixun_Liu"><meta name="copyright" content="Yixun_Liu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="1) 从 .java 到 .class：编译成字节码① 你写的是 Java 源码比如： 12345public class Hello &#123;  public static void main(String[] args) &#123;    System.out.println(&quot;hi&quot;);  &#125;&#125;  ② javac 编译器把源码编译成字节码（Byt">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Lava代码运行过程">
+<meta property="og:url" content="https://seeyoulikelast.github.io/2026/03/08/Java%E4%BB%A3%E7%A0%81%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/index.html">
+<meta property="og:site_name" content="SeeYouLikeLast">
+<meta property="og:description" content="1) 从 .java 到 .class：编译成字节码① 你写的是 Java 源码比如： 12345public class Hello &#123;  public static void main(String[] args) &#123;    System.out.println(&quot;hi&quot;);  &#125;&#125;  ② javac 编译器把源码编译成字节码（Byt">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://seeyoulikelast.github.io/img/avatar.jpg">
+<meta property="article:published_time" content="2026-03-07T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-03-08T13:45:03.284Z">
+<meta property="article:author" content="Yixun_Liu">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://seeyoulikelast.github.io/img/avatar.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Lava代码运行过程",
+  "url": "https://seeyoulikelast.github.io/2026/03/08/Java%E4%BB%A3%E7%A0%81%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/",
+  "image": "https://seeyoulikelast.github.io/img/avatar.jpg",
+  "datePublished": "2026-03-07T16:00:00.000Z",
+  "dateModified": "2026-03-08T13:45:03.284Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Yixun_Liu",
+      "url": "https://SeeYouLikeLast.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://seeyoulikelast.github.io/2026/03/08/Java%E4%BB%A3%E7%A0%81%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.3"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Lava代码运行过程',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 8.1.1"></head><body><div class="bg-animation" id="web_bg" style="background-image: url(/img/my_blog.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">6</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">SeeYouLikeLast</span></a><a class="nav-page-title" href="/"><span class="site-name">Lava代码运行过程</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Lava代码运行过程</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-03-07T16:00:00.000Z" title="发表于 2026-03-08 00:00:00">2026-03-08</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-08T13:45:03.284Z" title="更新于 2026-03-08 21:45:03">2026-03-08</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Java%E8%BF%90%E8%A1%8C%E5%8E%9F%E7%90%86/">Java运行原理</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="1-从-java-到-class：编译成字节码"><a href="#1-从-java-到-class：编译成字节码" class="headerlink" title="1) 从 .java 到 .class：编译成字节码"></a>1) 从 <code>.java</code> 到 <code>.class</code>：编译成字节码</h2><h3 id="①-你写的是-Java-源码"><a href="#①-你写的是-Java-源码" class="headerlink" title="① 你写的是 Java 源码"></a>① 你写的是 Java 源码</h3><p>比如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Hello</span> &#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;hi&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="②-javac-编译器把源码编译成字节码（Bytecode）"><a href="#②-javac-编译器把源码编译成字节码（Bytecode）" class="headerlink" title="② javac 编译器把源码编译成字节码（Bytecode）"></a>② <code>javac</code> 编译器把源码编译成字节码（Bytecode）</h3><p>执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javac Hello.java</span><br></pre></td></tr></table></figure>
+
+<p>会得到：</p>
+<ul>
+<li><code>Hello.class</code></li>
+</ul>
+<p><code>.class</code> 里不是某个 CPU（x86&#x2F;ARM）的机器指令，而是一种 <strong>平台无关</strong> 的指令集：<strong>JVM 字节码</strong>。</p>
+<blockquote>
+<p>这就是“一次编译，到处运行”的核心原因：<br>不同操作系统&#x2F;CPU 上只要有对应的 JVM 实现，就能执行同一份 <code>.class</code> 字节码。</p>
+</blockquote>
+<hr>
+<h2 id="2-从启动到执行：JVM-进程、类加载与初始化"><a href="#2-从启动到执行：JVM-进程、类加载与初始化" class="headerlink" title="2) 从启动到执行：JVM 进程、类加载与初始化"></a>2) 从启动到执行：JVM 进程、类加载与初始化</h2><p>运行时：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java Hello</span><br></pre></td></tr></table></figure>
+
+<p>发生的事大致是：</p>
+<h3 id="①-启动-JVM-进程"><a href="#①-启动-JVM-进程" class="headerlink" title="① 启动 JVM 进程"></a>① 启动 JVM 进程</h3><p><code>java</code> 命令会启动一个进程，创建 JVM（例如 HotSpot JVM），准备运行环境。</p>
+<h3 id="②-找到并加载主类（Hello）"><a href="#②-找到并加载主类（Hello）" class="headerlink" title="② 找到并加载主类（Hello）"></a>② 找到并加载主类（Hello）</h3><p>JVM 要执行 <code>main</code>，必须先把 <code>Hello.class</code> 装进来。这个过程由 **类加载器（ClassLoader）**完成。</p>
+<h3 id="③-类加载的三个关键阶段"><a href="#③-类加载的三个关键阶段" class="headerlink" title="③ 类加载的三个关键阶段"></a>③ 类加载的三个关键阶段</h3><p>通常分为（概念上）：</p>
+<ol>
+<li><p><strong>Loading（加载）</strong>：把 <code>.class</code> 的二进制数据读入内存，生成 <code>Class</code> 对象</p>
+</li>
+<li><p><strong>Linking（链接）</strong>：让类“可用”</p>
+<ul>
+<li><p><strong>Verification（验证）</strong>：检查字节码是否合法、安全（类型、栈、跳转等）</p>
+</li>
+<li><p><strong>Preparation（准备）</strong>：给 <code>static</code> 变量分配内存并设默认值</p>
+</li>
+<li><p><strong>Resolution（解析）</strong>：把常量池里符号引用（类名&#x2F;方法名）变成直接引用（指针&#x2F;句柄）</p>
+</li>
+</ul>
+</li>
+<li><p><strong>Initialization（初始化）</strong>：执行类的 <code>&lt;clinit&gt;</code>，也就是静态变量的显式赋值 + <code>static {}</code> 块</p>
+</li>
+</ol>
+<h3 id="④-类加载器的“父类委派”思想"><a href="#④-类加载器的“父类委派”思想" class="headerlink" title="④ 类加载器的“父类委派”思想"></a>④ 类加载器的“父类委派”思想</h3><p>常见的类加载器体系（不同 JVM 名称略有差异）：</p>
+<ul>
+<li><p><strong>Bootstrap</strong>：加载核心类库（如 <code>java.lang.*</code>）</p>
+</li>
+<li><p><strong>Platform&#x2F;Extension</strong>：平台扩展类库</p>
+</li>
+<li><p><strong>Application</strong>：应用 classpath 下的类</p>
+</li>
+<li><p>以及你自定义的 ClassLoader</p>
+</li>
+</ul>
+<p>典型机制：<strong>先问父加载器能不能加载，父不行我再加载</strong>。这样可以避免核心类被随意替换，提高安全性与一致性。</p>
+<hr>
+<h2 id="3-真正开始跑：解释执行-JIT-编译（热点编译）"><a href="#3-真正开始跑：解释执行-JIT-编译（热点编译）" class="headerlink" title="3) 真正开始跑：解释执行 + JIT 编译（热点编译）"></a>3) 真正开始跑：解释执行 + JIT 编译（热点编译）</h2><p>当类加载好，JVM 开始执行 <code>main</code> 方法里的字节码。执行引擎通常包含两条路：</p>
+<h3 id="①-解释器（Interpreter）"><a href="#①-解释器（Interpreter）" class="headerlink" title="① 解释器（Interpreter）"></a>① 解释器（Interpreter）</h3><ul>
+<li><p>一条条读取字节码指令，逐条执行</p>
+</li>
+<li><p>优点：启动快</p>
+</li>
+<li><p>缺点：长期跑起来速度不如纯机器码</p>
+</li>
+</ul>
+<h3 id="②-JIT-编译器（Just-In-Time）"><a href="#②-JIT-编译器（Just-In-Time）" class="headerlink" title="② JIT 编译器（Just-In-Time）"></a>② JIT 编译器（Just-In-Time）</h3><p>JVM 会在运行中“观察”哪些代码被频繁执行（热点），然后把这些热点字节码 <strong>编译为本机机器码</strong>，并做大量优化（内联、逃逸分析、去虚拟化、循环优化等）。</p>
+<p>于是整体过程常常是：</p>
+<ul>
+<li><p><strong>先解释执行</strong>（快启动）</p>
+</li>
+<li><p><strong>运行一段时间后</strong>，热点代码被 JIT 编译（性能越来越高）</p>
+</li>
+</ul>
+<blockquote>
+<p>这也是为什么很多 Java 程序会有“预热（warm-up）”现象：刚启动时慢一些，跑一会更快。</p>
+</blockquote>
+<p>（很多现代 JVM 还有“分层编译”思路：先用轻量编译快速提升，再用更激进的优化提升峰值性能。）</p>
+<hr>
+<h2 id="4-JVM-的内存区域：代码、对象、线程栈分别放哪？"><a href="#4-JVM-的内存区域：代码、对象、线程栈分别放哪？" class="headerlink" title="4) JVM 的内存区域：代码、对象、线程栈分别放哪？"></a>4) JVM 的内存区域：代码、对象、线程栈分别放哪？</h2><p>为了让字节码能执行，JVM 运行时会划分一些典型内存区域（概念模型，各 JVM 实现细节会不同）：</p>
+<h3 id="①-堆（Heap）"><a href="#①-堆（Heap）" class="headerlink" title="① 堆（Heap）"></a>① 堆（Heap）</h3><ul>
+<li><p><strong>存放对象实例</strong>（<code>new</code> 出来的对象）</p>
+</li>
+<li><p>通常是 GC 重点管理区域</p>
+</li>
+<li><p>大多数情况下占用最大</p>
+</li>
+</ul>
+<h3 id="②-虚拟机栈（Java-Stack）"><a href="#②-虚拟机栈（Java-Stack）" class="headerlink" title="② 虚拟机栈（Java Stack）"></a>② 虚拟机栈（Java Stack）</h3><ul>
+<li><p><strong>每个线程独有</strong></p>
+</li>
+<li><p>每次方法调用会创建一个 <strong>栈帧（Stack Frame）</strong></p>
+</li>
+<li><p>栈帧里放：局部变量表、操作数栈、返回地址、部分方法调用信息</p>
+</li>
+<li><p>方法返回后栈帧出栈</p>
+</li>
+</ul>
+<blockquote>
+<p><code>StackOverflowError</code> 常见原因：递归过深&#x2F;栈帧太多。</p>
+</blockquote>
+<h3 id="③-方法区-元空间（Method-Area-Metaspace）"><a href="#③-方法区-元空间（Method-Area-Metaspace）" class="headerlink" title="③ 方法区 &#x2F; 元空间（Method Area &#x2F; Metaspace）"></a>③ 方法区 &#x2F; 元空间（Method Area &#x2F; Metaspace）</h3><ul>
+<li><p>存类的元数据：类信息、方法信息、字段信息、运行时常量池等</p>
+</li>
+<li><p>现代 HotSpot 常用 **Metaspace（元空间）**作为实现之一（具体实现细节会随版本变化）</p>
+</li>
+</ul>
+<h3 id="④-程序计数器（PC-Register）"><a href="#④-程序计数器（PC-Register）" class="headerlink" title="④ 程序计数器（PC Register）"></a>④ 程序计数器（PC Register）</h3><ul>
+<li>每个线程一个，用来记录当前执行到哪条字节码指令（线程切换后能继续）</li>
+</ul>
+<h3 id="⑤-本地方法栈（Native-Method-Stack）"><a href="#⑤-本地方法栈（Native-Method-Stack）" class="headerlink" title="⑤ 本地方法栈（Native Method Stack）"></a>⑤ 本地方法栈（Native Method Stack）</h3><ul>
+<li>为 JNI &#x2F; 本地方法服务（调用 C&#x2F;C++ 等）</li>
+</ul>
+<hr>
+<h2 id="5-垃圾回收（GC）：对象怎么被自动释放？"><a href="#5-垃圾回收（GC）：对象怎么被自动释放？" class="headerlink" title="5) 垃圾回收（GC）：对象怎么被自动释放？"></a>5) 垃圾回收（GC）：对象怎么被自动释放？</h2><p>Java 里对象通常不靠你手动 <code>free</code>，而是 JVM 的 **垃圾回收器（GC）**自动回收堆内存。</p>
+<h3 id="①-核心思路：可达性分析（Reachability）"><a href="#①-核心思路：可达性分析（Reachability）" class="headerlink" title="① 核心思路：可达性分析（Reachability）"></a>① 核心思路：可达性分析（Reachability）</h3><p>从一组 <strong>GC Roots</strong> 出发（如线程栈中的引用、静态引用等），能一路引用到的对象认为“活着”；不可达的对象就可以回收。</p>
+<h3 id="②-分代思想（常见但非绝对）"><a href="#②-分代思想（常见但非绝对）" class="headerlink" title="② 分代思想（常见但非绝对）"></a>② 分代思想（常见但非绝对）</h3><p>很多 GC 会把对象按“存活时间&#x2F;特征”分区域管理：</p>
+<ul>
+<li><p>新创建对象多、死亡快：回收频繁但成本低</p>
+</li>
+<li><p>存活久的对象：回收频率低但每次更重</p>
+</li>
+</ul>
+<h3 id="③-停顿与并发"><a href="#③-停顿与并发" class="headerlink" title="③ 停顿与并发"></a>③ 停顿与并发</h3><p>GC 有时会引入 <strong>Stop-The-World</strong> 停顿；现代 GC 也大量使用并发&#x2F;并行技术来降低停顿时间。</p>
+<hr>
+<h2 id="6-线程与同步：为什么-Java-多线程能工作？"><a href="#6-线程与同步：为什么-Java-多线程能工作？" class="headerlink" title="6) 线程与同步：为什么 Java 多线程能工作？"></a>6) 线程与同步：为什么 Java 多线程能工作？</h2><ul>
+<li><p>JVM 会把 Java 线程映射到底层 OS 线程（主流实现如此）</p>
+</li>
+<li><p><code>synchronized</code>、<code>volatile</code>、<code>Lock</code> 等同步机制由 JVM + CPU 内存模型 + OS 协作实现</p>
+</li>
+<li><p>Java 内存模型（JMM）规定了可见性、有序性、原子性等规则，保证并发语义一致</p>
+</li>
+</ul>
+<hr>
+<h2 id="7-一句话总结-Java-代码运行原理"><a href="#7-一句话总结-Java-代码运行原理" class="headerlink" title="7) 一句话总结 Java 代码运行原理"></a>7) 一句话总结 Java 代码运行原理</h2><p><strong>Java 源码先被编译成平台无关的字节码 <code>.class</code>，运行时由 JVM 通过类加载器加载并验证&#x2F;链接&#x2F;初始化，然后由解释器执行字节码；热点代码再由 JIT 编译成机器码以获得高性能；对象主要分配在堆上并由 GC 自动回收，方法调用通过线程栈栈帧管理。</strong></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://SeeYouLikeLast.github.io">Yixun_Liu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://seeyoulikelast.github.io/2026/03/08/Java%E4%BB%A3%E7%A0%81%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/">https://seeyoulikelast.github.io/2026/03/08/Java%E4%BB%A3%E7%A0%81%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://SeeYouLikeLast.github.io" target="_blank">SeeYouLikeLast</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Java/">Java</a></div><div class="post-share"><div class="social-share" data-image="/img/avatar.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/02/25/%E9%98%BF%E9%87%8C%E4%BA%91%20ECS%20+%20Frp%20+%20VSCode%20Remote-SSH%20%E8%BF%9C%E7%A8%8B%E5%BC%80%E5%8F%91%E5%85%A8%E6%8C%87%E5%8D%97/" title="阿里云 ECS + Frp + VSCode Remote-SSH 远程开发全指南"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">阿里云 ECS + Frp + VSCode Remote-SSH 远程开发全指南</div></div><div class="info-2"><div class="info-item-1">123456789# 阿里云 ECS + Frp + VSCode Remote-SSH 远程开发全指南&gt; [!abstract] 简介&gt; 本文档详细记录了如何利用 **阿里云 ECS** 作为中转服务器，配合 **Frp** 内网穿透工具，实现外网环境下通过 **VSCode Remote-SSH** 访问并开发处于内网（如家中/公司）的高性能主机。&gt; &gt; **核心优势**：&gt; * **低成本**：使用按量付费或特惠 ECS，成本极低。&gt; * **高性能**：利用内网主机的算力（如 GPU），摆脱笔记本性能焦虑。&gt; * **安全性**：通过 STCP 模式或白名单限制，保障内网安全。  🛠️ 1. 准备工作1.1 硬件&#x2F;资源准备   角色 设备描述 需求    中转服务器 阿里云 ECS 实例 拥有 公网 IP，带宽建议 3M+ (主要影响代码同步速度，不影响终端响应)   被控端 (内网) 家中&#x2F;公司的高性能 PC 安装 Linux (Ubuntu&#x2F;CentOS) 或 Windows (需启用 Open...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Yixun_Liu</div><div class="author-info-description">码行千里，积于跬步。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">6</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/seeyoulikelast"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/SeeYouLikeLast" target="_blank" title="GitHub"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xidian_yixunliu@163.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E4%BB%8E-java-%E5%88%B0-class%EF%BC%9A%E7%BC%96%E8%AF%91%E6%88%90%E5%AD%97%E8%8A%82%E7%A0%81"><span class="toc-number">1.</span> <span class="toc-text">1) 从 .java 到 .class：编译成字节码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%91%A0-%E4%BD%A0%E5%86%99%E7%9A%84%E6%98%AF-Java-%E6%BA%90%E7%A0%81"><span class="toc-number">1.1.</span> <span class="toc-text">① 你写的是 Java 源码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%91%A1-javac-%E7%BC%96%E8%AF%91%E5%99%A8%E6%8A%8A%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E6%88%90%E5%AD%97%E8%8A%82%E7%A0%81%EF%BC%88Bytecode%EF%BC%89"><span class="toc-number">1.2.</span> <span class="toc-text">② javac 编译器把源码编译成字节码（Bytecode）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E4%BB%8E%E5%90%AF%E5%8A%A8%E5%88%B0%E6%89%A7%E8%A1%8C%EF%BC%9AJVM-%E8%BF%9B%E7%A8%8B%E3%80%81%E7%B1%BB%E5%8A%A0%E8%BD%BD%E4%B8%8E%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">2.</span> <span class="toc-text">2) 从启动到执行：JVM 进程、类加载与初始化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%91%A0-%E5%90%AF%E5%8A%A8-JVM-%E8%BF%9B%E7%A8%8B"><span class="toc-number">2.1.</span> <span class="toc-text">① 启动 JVM 进程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%91%A1-%E6%89%BE%E5%88%B0%E5%B9%B6%E5%8A%A0%E8%BD%BD%E4%B8%BB%E7%B1%BB%EF%BC%88Hello%EF%BC%89"><span class="toc-number">2.2.</span> <span class="toc-text">② 找到并加载主类（Hello）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%91%A2-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E7%9A%84%E4%B8%89%E4%B8%AA%E5%85%B3%E9%94%AE%E9%98%B6%E6%AE%B5"><span class="toc-number">2.3.</span> <span class="toc-text">③ 类加载的三个关键阶段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%91%A3-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8%E7%9A%84%E2%80%9C%E7%88%B6%E7%B1%BB%E5%A7%94%E6%B4%BE%E2%80%9D%E6%80%9D%E6%83%B3"><span class="toc-number">2.4.</span> <span class="toc-text">④ 类加载器的“父类委派”思想</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E7%9C%9F%E6%AD%A3%E5%BC%80%E5%A7%8B%E8%B7%91%EF%BC%9A%E8%A7%A3%E9%87%8A%E6%89%A7%E8%A1%8C-JIT-%E7%BC%96%E8%AF%91%EF%BC%88%E7%83%AD%E7%82%B9%E7%BC%96%E8%AF%91%EF%BC%89"><span class="toc-number">3.</span> <span class="toc-text">3) 真正开始跑：解释执行 + JIT 编译（热点编译）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%91%A0-%E8%A7%A3%E9%87%8A%E5%99%A8%EF%BC%88Interpreter%EF%BC%89"><span class="toc-number">3.1.</span> <span class="toc-text">① 解释器（Interpreter）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%91%A1-JIT-%E7%BC%96%E8%AF%91%E5%99%A8%EF%BC%88Just-In-Time%EF%BC%89"><span class="toc-number">3.2.</span> <span class="toc-text">② JIT 编译器（Just-In-Time）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-JVM-%E7%9A%84%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F%EF%BC%9A%E4%BB%A3%E7%A0%81%E3%80%81%E5%AF%B9%E8%B1%A1%E3%80%81%E7%BA%BF%E7%A8%8B%E6%A0%88%E5%88%86%E5%88%AB%E6%94%BE%E5%93%AA%EF%BC%9F"><span class="toc-number">4.</span> <span class="toc-text">4) JVM 的内存区域：代码、对象、线程栈分别放哪？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%91%A0-%E5%A0%86%EF%BC%88Heap%EF%BC%89"><span class="toc-number">4.1.</span> <span class="toc-text">① 堆（Heap）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%91%A1-%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88%EF%BC%88Java-Stack%EF%BC%89"><span class="toc-number">4.2.</span> <span class="toc-text">② 虚拟机栈（Java Stack）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%91%A2-%E6%96%B9%E6%B3%95%E5%8C%BA-%E5%85%83%E7%A9%BA%E9%97%B4%EF%BC%88Method-Area-Metaspace%EF%BC%89"><span class="toc-number">4.3.</span> <span class="toc-text">③ 方法区 &#x2F; 元空间（Method Area &#x2F; Metaspace）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%91%A3-%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8%EF%BC%88PC-Register%EF%BC%89"><span class="toc-number">4.4.</span> <span class="toc-text">④ 程序计数器（PC Register）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%91%A4-%E6%9C%AC%E5%9C%B0%E6%96%B9%E6%B3%95%E6%A0%88%EF%BC%88Native-Method-Stack%EF%BC%89"><span class="toc-number">4.5.</span> <span class="toc-text">⑤ 本地方法栈（Native Method Stack）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%EF%BC%88GC%EF%BC%89%EF%BC%9A%E5%AF%B9%E8%B1%A1%E6%80%8E%E4%B9%88%E8%A2%AB%E8%87%AA%E5%8A%A8%E9%87%8A%E6%94%BE%EF%BC%9F"><span class="toc-number">5.</span> <span class="toc-text">5) 垃圾回收（GC）：对象怎么被自动释放？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%91%A0-%E6%A0%B8%E5%BF%83%E6%80%9D%E8%B7%AF%EF%BC%9A%E5%8F%AF%E8%BE%BE%E6%80%A7%E5%88%86%E6%9E%90%EF%BC%88Reachability%EF%BC%89"><span class="toc-number">5.1.</span> <span class="toc-text">① 核心思路：可达性分析（Reachability）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%91%A1-%E5%88%86%E4%BB%A3%E6%80%9D%E6%83%B3%EF%BC%88%E5%B8%B8%E8%A7%81%E4%BD%86%E9%9D%9E%E7%BB%9D%E5%AF%B9%EF%BC%89"><span class="toc-number">5.2.</span> <span class="toc-text">② 分代思想（常见但非绝对）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%91%A2-%E5%81%9C%E9%A1%BF%E4%B8%8E%E5%B9%B6%E5%8F%91"><span class="toc-number">5.3.</span> <span class="toc-text">③ 停顿与并发</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E7%BA%BF%E7%A8%8B%E4%B8%8E%E5%90%8C%E6%AD%A5%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88-Java-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E8%83%BD%E5%B7%A5%E4%BD%9C%EF%BC%9F"><span class="toc-number">6.</span> <span class="toc-text">6) 线程与同步：为什么 Java 多线程能工作？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-%E4%B8%80%E5%8F%A5%E8%AF%9D%E6%80%BB%E7%BB%93-Java-%E4%BB%A3%E7%A0%81%E8%BF%90%E8%A1%8C%E5%8E%9F%E7%90%86"><span class="toc-number">7.</span> <span class="toc-text">7) 一句话总结 Java 代码运行原理</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/08/Java%E4%BB%A3%E7%A0%81%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/" title="Lava代码运行过程">Lava代码运行过程</a><time datetime="2026-03-07T16:00:00.000Z" title="发表于 2026-03-08 00:00:00">2026-03-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/02/25/%E9%98%BF%E9%87%8C%E4%BA%91%20ECS%20+%20Frp%20+%20VSCode%20Remote-SSH%20%E8%BF%9C%E7%A8%8B%E5%BC%80%E5%8F%91%E5%85%A8%E6%8C%87%E5%8D%97/" title="阿里云 ECS + Frp + VSCode Remote-SSH 远程开发全指南">阿里云 ECS + Frp + VSCode Remote-SSH 远程开发全指南</a><time datetime="2026-02-24T16:00:00.000Z" title="发表于 2026-02-25 00:00:00">2026-02-25</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/11/Markdown%E5%B8%B8%E8%A7%81%E8%AF%AD%E6%B3%95/" title="Markdown学习">Markdown学习</a><time datetime="2026-01-10T16:00:00.000Z" title="发表于 2026-01-11 00:00:00">2026-01-11</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/11/Workflow%E5%BA%93%E6%96%87%E4%BB%B6%E5%AD%A6%E4%B9%A0/" title="Workflow库文件学习">Workflow库文件学习</a><time datetime="2026-01-10T16:00:00.000Z" title="发表于 2026-01-11 00:00:00">2026-01-11</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/07/Github_page/" title="Github_page">Github_page</a><time datetime="2026-01-06T16:00:00.000Z" title="发表于 2026-01-07 00:00:00">2026-01-07</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By Yixun_Liu</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.1</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.3</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.3"></script><script src="/js/main.js?v=5.5.3"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
