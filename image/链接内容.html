@@ -1,0 +1,434 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>SeeYouLikeLast | SeeYouLikeLast</title><meta name="author" content="Yixun_Liu"><meta name="copyright" content="Yixun_Liu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="基于Redis Lua脚本的分布式令牌桶限流实现🔁 函数执行流程详解 线程安全初始化  std::lock_guard&lt;std::mutex&gt; lock(mutex_);  函数首先使用 std::lock_guard获取一个互斥锁。这是一个关键步骤，它确保了在同一个 RateLimiter实例上，同一时间只有一个线程能够执行这个 acquire函数。这对于防止多个线程同时修改本地状">
+<meta property="og:type" content="website">
+<meta property="og:title" content="SeeYouLikeLast">
+<meta property="og:url" content="https://seeyoulikelast.github.io/image/%E9%93%BE%E6%8E%A5%E5%86%85%E5%AE%B9.html">
+<meta property="og:site_name" content="SeeYouLikeLast">
+<meta property="og:description" content="基于Redis Lua脚本的分布式令牌桶限流实现🔁 函数执行流程详解 线程安全初始化  std::lock_guard&lt;std::mutex&gt; lock(mutex_);  函数首先使用 std::lock_guard获取一个互斥锁。这是一个关键步骤，它确保了在同一个 RateLimiter实例上，同一时间只有一个线程能够执行这个 acquire函数。这对于防止多个线程同时修改本地状">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://seeyoulikelast.github.io/img/avatar.jpg">
+<meta property="article:published_time" content="2026-04-11T15:13:58.033Z">
+<meta property="article:modified_time" content="2025-11-29T02:37:36.647Z">
+<meta property="article:author" content="Yixun_Liu">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://seeyoulikelast.github.io/img/avatar.jpg"><script type="application/ld+json"></script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://seeyoulikelast.github.io/image/%E9%93%BE%E6%8E%A5%E5%86%85%E5%AE%B9.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.3"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'SeeYouLikeLast',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'page'
+}</script><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 8.1.1"></head><body><div class="bg-animation" id="web_bg" style="background-image: url(/img/my_blog.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">8</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="not-home-page fixed" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">SeeYouLikeLast</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="page-site-info"><h1 id="site-title"></h1></div></header><main class="layout" id="content-inner"><div id="page"><div class="container" id="article-container"><h1 id="基于Redis-Lua脚本的分布式令牌桶限流实现"><a href="#基于Redis-Lua脚本的分布式令牌桶限流实现" class="headerlink" title="基于Redis Lua脚本的分布式令牌桶限流实现"></a>基于<strong>Redis Lua脚本</strong>的分布式令牌桶限流实现</h1><h3 id="🔁-函数执行流程详解"><a href="#🔁-函数执行流程详解" class="headerlink" title="🔁 函数执行流程详解"></a>🔁 函数执行流程详解</h3><ol>
+<li><p><strong>线程安全初始化</strong></p>
+<p> <code>std::lock_guard&lt;std::mutex&gt; lock(mutex_);</code></p>
+<p> 函数首先使用 <code>std::lock_guard</code>获取一个互斥锁。这是一个<strong>关键步骤</strong>，它确保了在同一个 <code>RateLimiter</code>实例上，<strong>同一时间只有一个线程</strong>能够执行这个 <code>acquire</code>函数。这对于防止多个线程同时修改本地状态（例如，虽然主要状态在Redis中，但锁能避免多个线程同时创建任务可能引发的混乱）是必要的。</p>
+</li>
+<li><p><strong>创建Redis异步任务</strong></p>
+<p> <code>auto* task = WFTaskFactory::create_redis_task(redis_url_, 0, nullptr); std::string tk = &quot;rate:&quot; + key; std::string ts = tk + &quot;:ts&quot;;</code></p>
+<p> 这行代码通过工作流（Workflow）框架创建了一个访问指定 <code>redis_url_</code>的Redis异步任务。同时，它为传入的限流键（<code>key</code>）生成两个Redis键：- <code>tk</code>：用于在Redis中存储该键对应的<strong>当前令牌数量</strong>。- <code>ts</code>：用于存储<strong>最后更新令牌数量的时间戳</strong>。</p>
+</li>
+<li><p><strong>设置Lua脚本执行命令</strong></p>
+<p> <code>task-&gt;get_req()-&gt;set_request(&quot;EVAL&quot;, {     lua_script, &quot;2&quot;, tk, ts,     std::to_string(rate_), std::to_string(capacity_), std::to_string(time(nullptr)) });</code></p>
+<p> 这是核心配置步骤。它向Redis任务发送一个 <code>EVAL</code>命令，用于执行预定义的Lua脚本（<code>lua_script</code>）。后面的参数含义如下：</p>
+<ul>
+<li><code>&quot;2&quot;</code>：表示后面紧跟着的两个键（<code>tk</code>和 <code>ts</code>）是作为 <code>KEYS</code>数组传递给Lua脚本的。</li>
+<li><code>tk</code>, <code>ts</code>：即上面生成的键名。</li>
+<li><code>rate_</code>, <code>capacity_</code>：令牌生成速率和令牌桶的最大容量。</li>
+<li><code>time(nullptr)</code>：当前的UNIX时间戳（秒为单位）。<br> Lua脚本会在Redis服务端<strong>原子性地</strong>执行令牌计算和扣减逻辑，最终返回1（允许）或0（拒绝）。</li>
+</ul>
+</li>
+<li><p><strong>设置回调函数与同步等待</strong></p>
+<p> <code>WFFacilities::WaitGroup wg(1); bool allowed = false; task-&gt;set_callback([&amp;wg, &amp;allowed](WFRedisTask* t) {     auto* resp = t-&gt;get_resp();     if (resp-&gt;get_result() == REDIS_REPLY_INTEGER &amp;&amp; resp-&gt;get_integer() == 1)         allowed = true;     wg.done(); });  series_of(task)-&gt;start(); wg.wait();</code></p>
+<p> 这部分是<strong>异步执行的核心</strong>。</p>
+<ul>
+<li>创建一个计数器为1的<code>WaitGroup</code>（<code>wg</code>）用于<strong>同步等待</strong>。</li>
+<li>设置任务的回调函数。当Redis服务器返回结果后，该函数被调用。它检查Redis的回复：如果回复类型是整数（<code>REDIS_REPLY_INTEGER</code>）且值为1，则将本地变量 <code>allowed</code>设置为 <code>true</code>，表示请求被允许；否则保持 <code>false</code>。最后调用 <code>wg.done()</code>通知等待的线程。</li>
+<li><code>series_of(task)-&gt;start()</code>将任务提交到工作流引擎开始异步执行。</li>
+<li><code>wg.wait()</code>会使当前线程阻塞，直到回调函数中执行了 <code>wg.done()</code>才继续往下执行。这样就完成了<strong>异步转同步</strong>的操作。</li>
+</ul>
+</li>
+<li><p><strong>返回最终结果</strong></p>
+<p> <code>return allowed;</code><br> 函数返回回调函数中设置的 <code>allowed</code>值。</p>
+</li>
+</ol>
+<h3 id="⚖️-设计特点与考量"><a href="#⚖️-设计特点与考量" class="headerlink" title="⚖️ 设计特点与考量"></a>⚖️ 设计特点与考量</h3><ul>
+<li><p><strong>同步阻塞接口</strong>：尽管内部使用了异步任务，但通过 <code>WaitGroup</code>的等待，<code>acquire</code>方法提供了一个<strong>同步阻塞</strong>的接口给调用方。调用者会等待直到拿到限流结果。</p>
+</li>
+<li><p><strong>潜在的锁竞争</strong>：函数开头的互斥锁（<code>mutex_</code>）保证了单实例下的线程安全，但在超高并发场景下，它可能成为<strong>性能瓶颈</strong>，因为所有线程需要串行化地创建和等待Redis任务。</p>
+</li>
+<li><p><strong>超时处理的缺失</strong>：当前实现中，<code>wg.wait()</code>会一直等待直到Redis返回结果。在实际生产环境中，通常需要增加<strong>超时机制</strong>，防止因网络问题或Redis故障导致线程无限期挂起。</p>
+</li>
+</ul>
+<h1 id="位图"><a href="#位图" class="headerlink" title="位图"></a>位图</h1><p><strong>Redis 使用了一种称为“位图”的紧凑数据结构来高效表示槽位分配信息</strong>。</p>
+<table>
+<thead>
+<tr>
+<th>计算步骤</th>
+<th>说明</th>
+<th>数值与公式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>1. 确定槽位总数</strong>​</td>
+<td>Redis 集群固定将数据空间划分为 16384 个槽位。</td>
+<td>16,384 个</td>
+</tr>
+<tr>
+<td><strong>2. 位图的基本单位</strong>​</td>
+<td>位图使用比特位来表示每个槽位的状态（例如，1表示该节点负责此槽位）。每个槽位仅需 <strong>1个比特</strong>。</td>
+<td>1 bit&#x2F;slot</td>
+</tr>
+<tr>
+<td><strong>3. 计算所需总比特数</strong>​</td>
+<td>槽位总数 × 每个槽位占用的比特数。</td>
+<td>16,384 slots × 1 bit&#x2F;slot &#x3D; <strong>16,384 bits</strong>​</td>
+</tr>
+<tr>
+<td><strong>4. 将比特转换为字节</strong>​</td>
+<td>1 字节等于 8 比特。</td>
+<td>16,384 bits ÷ 8 bits&#x2F;byte &#x3D; <strong>2,048 bytes</strong>​</td>
+</tr>
+<tr>
+<td><strong>5. 将字节转换为千字节</strong>​</td>
+<td>1 千字节等于 1024 字节。</td>
+<td>2,048 bytes ÷ 1024 bytes&#x2F;KB &#x3D; <strong>2 KB</strong></td>
+</tr>
+</tbody></table>
+<h1 id="相对地址与绝对地址"><a href="#相对地址与绝对地址" class="headerlink" title="相对地址与绝对地址"></a>相对地址与绝对地址</h1><table>
+<thead>
+<tr>
+<th>特性维度</th>
+<th>绝对地址</th>
+<th>相对地址</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>核心定义</strong>​</td>
+<td>独立、完整的路径，不依赖其他信息</td>
+<td>依赖一个已知的<strong>基准位置</strong>才能确定最终目标</td>
+</tr>
+<tr>
+<td><strong>表现形式</strong>​</td>
+<td><strong>网页</strong>：完整的URL（如 <code>https://example.com/images/cat.jpg</code>）<br><strong>计算机</strong>：内存的物理地址<br><strong>文件</strong>：本地硬盘的完整路径（如 <code>C:\Users\Pictures\cat.jpg</code>）</td>
+<td><strong>网页&#x2F;文件</strong>：以当前目录（<code>.</code>）、上级目录（<code>..</code>）或根目录（<code>/</code>）开头的路径（如 <code>../images/cat.jpg</code>）</td>
+</tr>
+<tr>
+<td><strong>稳定性</strong>​</td>
+<td>非常稳定。目标移动，地址即失效</td>
+<td>相对灵活。只要相对于基准位置的路径关系不变，地址就有效</td>
+</tr>
+<tr>
+<td><strong>使用场景</strong>​</td>
+<td>1. 不同网站（域名）之间的链接<br><br>2. 需要固定引用某个资源，防止被错误复制</td>
+<td>1. 同一网站或项目内部的资源引用<br><br>2. 方便整个项目迁移而不破坏内部链接</td>
+</tr>
+<tr>
+<td></td>
+<td>绝对文件\</td>
+<td>&#x2F;</td>
+</tr>
+</tbody></table>
+<h1 id="Redis-Lua脚本"><a href="#Redis-Lua脚本" class="headerlink" title="Redis Lua脚本"></a>Redis Lua脚本</h1><p><strong>1. 参数获取与初始化</strong></p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> tokens_key = KEYS[<span class="number">1</span>]      <span class="comment">-- 存储当前令牌数量的键（如：&quot;rate:user123&quot;）</span></span><br><span class="line"><span class="keyword">local</span> timestamp_key = KEYS[<span class="number">2</span>]   <span class="comment">-- 存储上次令牌刷新时间戳的键（如：&quot;rate:user123:ts&quot;）</span></span><br><span class="line"><span class="keyword">local</span> rate = <span class="built_in">tonumber</span>(ARGV[<span class="number">1</span>])  <span class="comment">-- 令牌生成速率（每秒生成多少个令牌）</span></span><br><span class="line"><span class="keyword">local</span> capacity = <span class="built_in">tonumber</span>(ARGV[<span class="number">2</span>]) <span class="comment">-- 令牌桶的最大容量</span></span><br><span class="line"><span class="keyword">local</span> now = <span class="built_in">tonumber</span>(ARGV[<span class="number">3</span>])   <span class="comment">-- 当前时间戳（秒为单位）</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><strong>作用</strong>：脚本首先接收两个Redis键（<code>KEYS</code>）和三个参数（<code>ARGV</code>）。这些参数定义了令牌桶的基本属性。</p>
+</li>
+<li><p><strong>键的设计</strong>：使用两个键分离存储令牌数和时间戳，避免数据覆盖，是常见的Redis限流模式。</p>
+</li>
+</ul>
+<p><strong>2. 令牌桶的初始化</strong></p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> remaining = redis.call(<span class="string">&#x27;get&#x27;</span>, tokens_key)</span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> remaining <span class="keyword">then</span></span><br><span class="line">    remaining = capacity</span><br><span class="line">    redis.call(<span class="string">&#x27;set&#x27;</span>, tokens_key, capacity)</span><br><span class="line">    redis.call(<span class="string">&#x27;set&#x27;</span>, timestamp_key, now)</span><br><span class="line">    redis.call(<span class="string">&#x27;expire&#x27;</span>, tokens_key, <span class="number">120</span>)</span><br><span class="line">    redis.call(<span class="string">&#x27;expire&#x27;</span>, timestamp_key, <span class="number">120</span>)</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><strong>作用</strong>：检查令牌桶是否存在。如果不存在（如首次请求或键已过期），则进行初始化。</p>
+</li>
+<li><p><strong>初始化逻辑</strong>：</p>
+<ul>
+<li>将令牌数设为最大容量（<code>capacity</code>），实现”冷启动”时桶满的状态。</li>
+<li>同时记录当前时间戳为最后一次刷新时间。</li>
+<li>为两个键设置120秒的过期时间（<code>expire 120</code>），防止不活跃的键长期占用内存。这个过期时间应大于令牌桶的自然填充时间。</li>
+</ul>
+</li>
+</ul>
+<p><strong>3. 令牌的计算与补充</strong></p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">remaining = <span class="built_in">math</span>.<span class="built_in">min</span>(capacity, <span class="built_in">tonumber</span>(remaining) + (now - <span class="built_in">tonumber</span>(redis.call(<span class="string">&#x27;get&#x27;</span>, timestamp_key) <span class="keyword">or</span> now)) * rate)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><strong>核心逻辑</strong>：这是令牌桶算法的关键步骤，通过计算而非定时任务来补充令牌，更高效。</p>
+</li>
+<li><p><strong>计算过程</strong>：</p>
+<ol>
+<li>计算时间间隔：<code>(now - last_timestamp)</code>，即距离上次刷新经过的秒数。</li>
+<li>计算应补充的令牌数：<code>时间间隔 × 速率</code>。例如，速率&#x3D;2令牌&#x2F;秒，间隔&#x3D;3秒，则补充6个令牌。</li>
+<li>计算最新令牌数：<code>剩余令牌 + 补充令牌</code>，并确保不超过桶容量（<code>math.min</code>的作用）。</li>
+</ol>
+</li>
+</ul>
+<p><strong>4. 时间戳更新与决策</strong></p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">redis.call(<span class="string">&#x27;set&#x27;</span>, timestamp_key, now)</span><br><span class="line"><span class="keyword">if</span> remaining &gt;= <span class="number">1</span> <span class="keyword">then</span></span><br><span class="line">    redis.call(<span class="string">&#x27;decr&#x27;</span>, tokens_key)</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>  <span class="comment">-- 允许通过</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>  <span class="comment">-- 拒绝请求</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><strong>时间戳更新</strong>：无论请求是否通过，都将时间戳更新为当前时间。这确保了下次计算时时间基准正确。</p>
+</li>
+<li><p><strong>决策逻辑</strong>：</p>
+<ul>
+<li>如果剩余令牌数 ≥1：消费一个令牌（<code>decr</code>），返回1（允许）。</li>
+<li>如果剩余令牌数 &lt;1：不消费令牌，返回0（拒绝）。这意味着当前请求无法获取令牌。</li>
+</ul>
+</li>
+</ul>
+<h1 id="原子性"><a href="#原子性" class="headerlink" title="原子性"></a>原子性</h1><p>原子性指脚本作为一个<strong>整体执行</strong>：期间不会被其他命令插入，所有操作要么全部完成，要么全部不完成。<br>基于Redis的<strong>单线程事件循环模型</strong>。命令执行器在同一时刻只处理一个任务（一个命令或一个完整的Lua脚本）。</p>
+</div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Yixun_Liu</div><div class="author-info-description">码行千里，积于跬步。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">8</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/seeyoulikelast"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/SeeYouLikeLast" target="_blank" title="GitHub"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xidian_yixunliu@163.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/11/%E6%9D%8E%E6%B2%90/" title="李沐">李沐</a><time datetime="2026-04-10T16:00:00.000Z" title="发表于 2026-04-11 00:00:00">2026-04-11</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/11/%E6%9D%8E%E6%B2%902/" title="李沐2">李沐2</a><time datetime="2026-04-10T16:00:00.000Z" title="发表于 2026-04-11 00:00:00">2026-04-11</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/08/Java%E4%BB%A3%E7%A0%81%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/" title="Java代码运行过程">Java代码运行过程</a><time datetime="2026-03-07T16:00:00.000Z" title="发表于 2026-03-08 00:00:00">2026-03-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/02/25/%E9%98%BF%E9%87%8C%E4%BA%91%20ECS%20+%20Frp%20+%20VSCode%20Remote-SSH%20%E8%BF%9C%E7%A8%8B%E5%BC%80%E5%8F%91%E5%85%A8%E6%8C%87%E5%8D%97/" title="阿里云 ECS + Frp + VSCode Remote-SSH 远程开发全指南">阿里云 ECS + Frp + VSCode Remote-SSH 远程开发全指南</a><time datetime="2026-02-24T16:00:00.000Z" title="发表于 2026-02-25 00:00:00">2026-02-25</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/11/Markdown%E5%B8%B8%E8%A7%81%E8%AF%AD%E6%B3%95/" title="Markdown学习">Markdown学习</a><time datetime="2026-01-10T16:00:00.000Z" title="发表于 2026-01-11 00:00:00">2026-01-11</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline">
+            <i class="fas fa-folder-open"></i>
+            <span>分类</span>
+            
+          </div>
+          <ul class="card-category-list" id="aside-cat-list">
+            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/C-%E5%90%8E%E7%AB%AF%E9%A1%B9%E7%9B%AE/"><span class="card-category-list-name">C++后端项目</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Java%E8%BF%90%E8%A1%8C%E5%8E%9F%E7%90%86/"><span class="card-category-list-name">Java运行原理</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E5%B8%B8%E7%94%A8%E5%8A%9F%E8%83%BD/"><span class="card-category-list-name">常用功能</span><span class="card-category-list-count">3</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%9C%8D%E5%8A%A1%E5%99%A8/"><span class="card-category-list-name">服务器</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"><span class="card-category-list-name">深度学习</span><span class="card-category-list-count">2</span></a></li>
+          </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/Github/" style="font-size: 1.3em; color: #99a1ac">Github</a> <a href="/tags/Java/" style="font-size: 1.1em; color: #999">Java</a> <a href="/tags/Markdown/" style="font-size: 1.1em; color: #999">Markdown</a> <a href="/tags/Workflow/" style="font-size: 1.1em; color: #999">Workflow</a> <a href="/tags/%E7%A7%91%E7%A0%94/" style="font-size: 1.5em; color: #99a9bf">科研</a></div></div><div class="card-widget card-archives">
+    <div class="item-headline">
+      <i class="fas fa-archive"></i>
+      <span>归档</span>
+      
+    </div>
+  
+    <ul class="card-archive-list">
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2026/04/">
+            <span class="card-archive-list-date">
+              四月 2026
+            </span>
+            <span class="card-archive-list-count">2</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2026/03/">
+            <span class="card-archive-list-date">
+              三月 2026
+            </span>
+            <span class="card-archive-list-count">1</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2026/02/">
+            <span class="card-archive-list-date">
+              二月 2026
+            </span>
+            <span class="card-archive-list-count">1</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2026/01/">
+            <span class="card-archive-list-date">
+              一月 2026
+            </span>
+            <span class="card-archive-list-count">4</span>
+          </a>
+        </li>
+      
+    </ul>
+  </div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站信息</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">8</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总浏览量 :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2026-04-11T15:34:59.117Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By Yixun_Liu</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.1</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.3</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.3"></script><script src="/js/main.js?v=5.5.3"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        loader: {
+          load: [
+            // Four font extension packages (optional)
+            //- '[tex]/bbm',
+            //- '[tex]/bboldx',
+            //- '[tex]/dsfont',
+            '[tex]/mhchem'
+          ],
+          paths: {
+            'mathjax-newcm': '[mathjax]/../@mathjax/mathjax-newcm-font',
+
+            //- // Four font extension packages (optional)
+            //- 'mathjax-bbm-extension': '[mathjax]/../@mathjax/mathjax-bbm-font-extension',
+            //- 'mathjax-bboldx-extension': '[mathjax]/../@mathjax/mathjax-bboldx-font-extension',
+            //- 'mathjax-dsfont-extension': '[mathjax]/../@mathjax/mathjax-dsfont-font-extension',
+            'mathjax-mhchem-extension': '[mathjax]/../@mathjax/mathjax-mhchem-font-extension'
+          }
+        },
+        output: {
+          font: 'mathjax-newcm',
+        },
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+          packages: {
+            '[+]': [
+              'mhchem'
+            ]
+          }
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          menuOptions: {
+            settings: {
+              enrich: false  // Turn off Braille and voice narration text automatic generation
+            }
+          },
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
