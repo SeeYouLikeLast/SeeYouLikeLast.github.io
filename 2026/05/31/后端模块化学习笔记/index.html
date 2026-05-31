@@ -1,0 +1,1618 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Tlias后端模块化学习笔记 | SeeYouLikeLast</title><meta name="author" content="Yixun_Liu"><meta name="copyright" content="Yixun_Liu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="0. 后端学习总路线Java Web 后端可以按下面路线理解： 12345678910111213141516171819202122232425Maven 项目管理  ↓SpringBoot Web 入门  ↓HTTP 协议与 REST 接口  ↓三层架构 Controller-Service-Mapper  ↓数据库 MySQL 与 SQL  ↓MyBatis 操作数据库  ↓业务模块 CR">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Tlias后端模块化学习笔记">
+<meta property="og:url" content="https://seeyoulikelast.github.io/2026/05/31/%E5%90%8E%E7%AB%AF%E6%A8%A1%E5%9D%97%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:site_name" content="SeeYouLikeLast">
+<meta property="og:description" content="0. 后端学习总路线Java Web 后端可以按下面路线理解： 12345678910111213141516171819202122232425Maven 项目管理  ↓SpringBoot Web 入门  ↓HTTP 协议与 REST 接口  ↓三层架构 Controller-Service-Mapper  ↓数据库 MySQL 与 SQL  ↓MyBatis 操作数据库  ↓业务模块 CR">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://seeyoulikelast.github.io/img/avatar.jpg">
+<meta property="article:published_time" content="2026-05-30T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-05-31T12:32:59.264Z">
+<meta property="article:author" content="Yixun_Liu">
+<meta property="article:tag" content="java">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://seeyoulikelast.github.io/img/avatar.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Tlias后端模块化学习笔记",
+  "url": "https://seeyoulikelast.github.io/2026/05/31/%E5%90%8E%E7%AB%AF%E6%A8%A1%E5%9D%97%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/",
+  "image": "https://seeyoulikelast.github.io/img/avatar.jpg",
+  "datePublished": "2026-05-30T16:00:00.000Z",
+  "dateModified": "2026-05-31T12:32:59.264Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Yixun_Liu",
+      "url": "https://SeeYouLikeLast.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://seeyoulikelast.github.io/2026/05/31/%E5%90%8E%E7%AB%AF%E6%A8%A1%E5%9D%97%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.3"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Tlias后端模块化学习笔记',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 8.1.1"></head><body><div class="bg-animation" id="web_bg" style="background-image: url(/img/my_blog.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">10</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">6</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">SeeYouLikeLast</span></a><a class="nav-page-title" href="/"><span class="site-name">Tlias后端模块化学习笔记</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Tlias后端模块化学习笔记</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-05-30T16:00:00.000Z" title="发表于 2026-05-31 00:00:00">2026-05-31</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-05-31T12:32:59.264Z" title="更新于 2026-05-31 20:32:59">2026-05-31</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%90%8E%E7%AB%AF/">后端</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><hr>
+<h2 id="0-后端学习总路线"><a href="#0-后端学习总路线" class="headerlink" title="0. 后端学习总路线"></a>0. 后端学习总路线</h2><p>Java Web 后端可以按下面路线理解：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">Maven 项目管理</span><br><span class="line">  ↓</span><br><span class="line">SpringBoot Web 入门</span><br><span class="line">  ↓</span><br><span class="line">HTTP 协议与 REST 接口</span><br><span class="line">  ↓</span><br><span class="line">三层架构 Controller-Service-Mapper</span><br><span class="line">  ↓</span><br><span class="line">数据库 MySQL 与 SQL</span><br><span class="line">  ↓</span><br><span class="line">MyBatis 操作数据库</span><br><span class="line">  ↓</span><br><span class="line">业务模块 CRUD 实战</span><br><span class="line">  ↓</span><br><span class="line">分页、条件、多表查询</span><br><span class="line">  ↓</span><br><span class="line">事务、异常、日志、文件上传</span><br><span class="line">  ↓</span><br><span class="line">登录认证 JWT、Filter、Interceptor</span><br><span class="line">  ↓</span><br><span class="line">AOP 面向切面编程</span><br><span class="line">  ↓</span><br><span class="line">SpringBoot 原理与自动配置</span><br><span class="line">  ↓</span><br><span class="line">Maven 高级、多模块、部署、Docker</span><br></pre></td></tr></table></figure>
+
+<p>后端开发的核心目标是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">接收请求 → 处理业务 → 操作数据库 → 返回结果 → 保证安全、稳定、可维护</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="第一模块：Maven-项目管理"><a href="#第一模块：Maven-项目管理" class="headerlink" title="第一模块：Maven 项目管理"></a>第一模块：Maven 项目管理</h1><h2 id="1-1-Maven-的三大作用"><a href="#1-1-Maven-的三大作用" class="headerlink" title="1.1 Maven 的三大作用"></a>1.1 Maven 的三大作用</h2><table>
+<thead>
+<tr>
+<th>作用</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>依赖管理</td>
+<td>不手动复制 jar，通过 <code>pom.xml</code> 统一声明依赖</td>
+</tr>
+<tr>
+<td>统一项目结构</td>
+<td>所有 Maven 项目目录规范一致</td>
+</tr>
+<tr>
+<td>标准化构建</td>
+<td>用命令完成编译、测试、打包、安装</td>
+</tr>
+</tbody></table>
+<p>标准目录：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">project</span><br><span class="line">  ├── pom.xml</span><br><span class="line">  └── src</span><br><span class="line">      ├── main</span><br><span class="line">      │   ├── java</span><br><span class="line">      │   └── resources</span><br><span class="line">      └── test</span><br><span class="line">          ├── java</span><br><span class="line">          └── resources</span><br></pre></td></tr></table></figure>
+
+<h2 id="1-2-Maven-坐标"><a href="#1-2-Maven-坐标" class="headerlink" title="1.2 Maven 坐标"></a>1.2 Maven 坐标</h2><p>Maven 通过坐标唯一定位一个依赖：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.x.x<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>标签</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>groupId</code></td>
+<td>组织或公司名，通常域名反写</td>
+</tr>
+<tr>
+<td><code>artifactId</code></td>
+<td>项目或模块名</td>
+</tr>
+<tr>
+<td><code>version</code></td>
+<td>版本号</td>
+</tr>
+</tbody></table>
+<h2 id="1-3-仓库体系"><a href="#1-3-仓库体系" class="headerlink" title="1.3 仓库体系"></a>1.3 仓库体系</h2><p>依赖查找顺序：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">本地仓库 → 私服仓库 → 中央仓库</span><br></pre></td></tr></table></figure>
+
+<p>如果依赖下载失败，常见原因：</p>
+<ul>
+<li>网络问题。</li>
+<li>镜像源配置错误。</li>
+<li>本地仓库中存在 <code>.lastUpdated</code> 失败缓存文件。</li>
+<li>坐标写错。</li>
+</ul>
+<h2 id="1-4-生命周期"><a href="#1-4-生命周期" class="headerlink" title="1.4 生命周期"></a>1.4 生命周期</h2><p>Maven 常用生命周期阶段：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clean → compile → test → package → install</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>mvn clean</code></td>
+<td>清理 <code>target</code></td>
+</tr>
+<tr>
+<td><code>mvn compile</code></td>
+<td>编译主代码</td>
+</tr>
+<tr>
+<td><code>mvn test</code></td>
+<td>运行测试</td>
+</tr>
+<tr>
+<td><code>mvn package</code></td>
+<td>打包</td>
+</tr>
+<tr>
+<td><code>mvn install</code></td>
+<td>安装到本地仓库</td>
+</tr>
+</tbody></table>
+<p>同一套生命周期中，执行后面的阶段会自动执行前面的阶段。</p>
+<h2 id="1-5-依赖范围-scope"><a href="#1-5-依赖范围-scope" class="headerlink" title="1.5 依赖范围 scope"></a>1.5 依赖范围 scope</h2><table>
+<thead>
+<tr>
+<th>scope</th>
+<th>编译</th>
+<th>测试</th>
+<th>运行</th>
+<th>打包</th>
+<th>典型场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>compile</td>
+<td>是</td>
+<td>是</td>
+<td>是</td>
+<td>是</td>
+<td>默认</td>
+</tr>
+<tr>
+<td>test</td>
+<td>否</td>
+<td>是</td>
+<td>否</td>
+<td>否</td>
+<td>JUnit</td>
+</tr>
+<tr>
+<td>provided</td>
+<td>是</td>
+<td>是</td>
+<td>否</td>
+<td>否</td>
+<td>Servlet API</td>
+</tr>
+<tr>
+<td>runtime</td>
+<td>否</td>
+<td>是</td>
+<td>是</td>
+<td>是</td>
+<td>数据库驱动</td>
+</tr>
+</tbody></table>
+<hr>
+<h1 id="第二模块：SpringBoot-Web-基础"><a href="#第二模块：SpringBoot-Web-基础" class="headerlink" title="第二模块：SpringBoot Web 基础"></a>第二模块：SpringBoot Web 基础</h1><h2 id="2-1-SpringBoot-解决什么问题"><a href="#2-1-SpringBoot-解决什么问题" class="headerlink" title="2.1 SpringBoot 解决什么问题"></a>2.1 SpringBoot 解决什么问题</h2><p>传统 Spring 项目配置较多，SpringBoot 的目标是：</p>
+<ul>
+<li>快速创建项目。</li>
+<li>内嵌 Tomcat。</li>
+<li>自动配置常用组件。</li>
+<li>用起步依赖简化 jar 管理。</li>
+<li>让开发者更关注业务代码。</li>
+</ul>
+<p>启动类示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TliasApplication</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        SpringApplication.run(TliasApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-2-Controller-入门"><a href="#2-2-Controller-入门" class="headerlink" title="2.2 Controller 入门"></a>2.2 Controller 入门</h2><p>Controller 用来接收浏览器或前端发来的请求。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HelloController</span> &#123;</span><br><span class="line">    <span class="meta">@GetMapping(&quot;/hello&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">hello</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;hello&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>重点：</p>
+<ul>
+<li><code>@RestController</code> &#x3D; <code>@Controller</code> + <code>@ResponseBody</code>。</li>
+<li><code>@ResponseBody</code> 表示方法返回值直接作为响应体返回。</li>
+<li>SpringBoot 默认会把对象转换为 JSON。</li>
+</ul>
+<h2 id="2-3-HTTP-协议"><a href="#2-3-HTTP-协议" class="headerlink" title="2.3 HTTP 协议"></a>2.3 HTTP 协议</h2><p>HTTP 是前后端通信协议。</p>
+<p>请求包括：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">请求行：请求方式、请求路径、协议版本</span><br><span class="line">请求头：浏览器、token、content-type 等信息</span><br><span class="line">请求体：POST/PUT 提交的数据</span><br></pre></td></tr></table></figure>
+
+<p>响应包括：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">状态行：状态码</span><br><span class="line">响应头：响应元信息</span><br><span class="line">响应体：返回给前端的数据</span><br></pre></td></tr></table></figure>
+
+<p>常见状态码：</p>
+<table>
+<thead>
+<tr>
+<th>状态码</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>200</td>
+<td>成功</td>
+</tr>
+<tr>
+<td>400</td>
+<td>请求参数错误</td>
+</tr>
+<tr>
+<td>401</td>
+<td>未登录或 token 无效</td>
+</tr>
+<tr>
+<td>403</td>
+<td>无权限</td>
+</tr>
+<tr>
+<td>404</td>
+<td>资源不存在</td>
+</tr>
+<tr>
+<td>500</td>
+<td>服务器内部错误</td>
+</tr>
+</tbody></table>
+<h2 id="2-4-REST-风格接口"><a href="#2-4-REST-风格接口" class="headerlink" title="2.4 REST 风格接口"></a>2.4 REST 风格接口</h2><p>REST 风格强调：用 URL 表示资源，用 HTTP 方法表示操作。</p>
+<table>
+<thead>
+<tr>
+<th>操作</th>
+<th>方法</th>
+<th>路径示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>查询</td>
+<td>GET</td>
+<td><code>/depts</code>、<code>/emps/{id}</code></td>
+</tr>
+<tr>
+<td>新增</td>
+<td>POST</td>
+<td><code>/depts</code></td>
+</tr>
+<tr>
+<td>修改</td>
+<td>PUT</td>
+<td><code>/depts</code></td>
+</tr>
+<tr>
+<td>删除</td>
+<td>DELETE</td>
+<td><code>/depts/{id}</code></td>
+</tr>
+</tbody></table>
+<p>这样前后端接口更统一、更容易维护。</p>
+<hr>
+<h1 id="第三模块：三层架构与-IOC-DI"><a href="#第三模块：三层架构与-IOC-DI" class="headerlink" title="第三模块：三层架构与 IOC&#x2F;DI"></a>第三模块：三层架构与 IOC&#x2F;DI</h1><h2 id="3-1-三层架构"><a href="#3-1-三层架构" class="headerlink" title="3.1 三层架构"></a>3.1 三层架构</h2><p>后端业务通常分三层：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Controller 控制层：接收请求、返回响应</span><br><span class="line">      ↓</span><br><span class="line">Service 业务层：处理业务规则</span><br><span class="line">      ↓</span><br><span class="line">Mapper/DAO 持久层：操作数据库</span><br></pre></td></tr></table></figure>
+
+<p>示例调用链：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">前端请求 /depts</span><br><span class="line">  ↓</span><br><span class="line">DeptController</span><br><span class="line">  ↓</span><br><span class="line">DeptService</span><br><span class="line">  ↓</span><br><span class="line">DeptMapper</span><br><span class="line">  ↓</span><br><span class="line">MySQL</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-2-分层的好处"><a href="#3-2-分层的好处" class="headerlink" title="3.2 分层的好处"></a>3.2 分层的好处</h2><ul>
+<li>职责清晰。</li>
+<li>代码更容易维护。</li>
+<li>便于测试。</li>
+<li>业务规则不和请求细节混在一起。</li>
+<li>数据库访问可以替换实现。</li>
+</ul>
+<h2 id="3-3-IOC-控制反转"><a href="#3-3-IOC-控制反转" class="headerlink" title="3.3 IOC 控制反转"></a>3.3 IOC 控制反转</h2><p>IOC 的意思是：对象不再由程序员手动 <code>new</code>，而是交给 Spring 容器创建和管理。</p>
+<p>常见 Bean 注解：</p>
+<table>
+<thead>
+<tr>
+<th>注解</th>
+<th>常用位置</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>@Component</code></td>
+<td>普通组件</td>
+<td>通用 Bean</td>
+</tr>
+<tr>
+<td><code>@Controller</code></td>
+<td>控制层</td>
+<td>接收请求</td>
+</tr>
+<tr>
+<td><code>@RestController</code></td>
+<td>REST 控制层</td>
+<td>返回 JSON</td>
+</tr>
+<tr>
+<td><code>@Service</code></td>
+<td>业务层</td>
+<td>业务逻辑</td>
+</tr>
+<tr>
+<td><code>@Repository</code></td>
+<td>持久层</td>
+<td>数据访问</td>
+</tr>
+<tr>
+<td><code>@Mapper</code></td>
+<td>MyBatis 接口</td>
+<td>Mapper 代理对象</td>
+</tr>
+</tbody></table>
+<h2 id="3-4-DI-依赖注入"><a href="#3-4-DI-依赖注入" class="headerlink" title="3.4 DI 依赖注入"></a>3.4 DI 依赖注入</h2><p>DI 是 Spring 容器把需要的对象注入进来。</p>
+<p>推荐构造器注入：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DeptServiceImpl</span> <span class="keyword">implements</span> <span class="title class_">DeptService</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> DeptMapper deptMapper;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">DeptServiceImpl</span><span class="params">(DeptMapper deptMapper)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.deptMapper = deptMapper;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>常见问题：</p>
+<ul>
+<li>Bean 不在启动类所在包或子包下，扫描不到。</li>
+<li>同一接口有多个实现类时，需要 <code>@Qualifier</code> 或 <code>@Primary</code>。</li>
+<li><code>@Autowired</code> 字段注入能用，但可测试性和不可变性不如构造器注入。</li>
+</ul>
+<hr>
+<h1 id="第四模块：MySQL-与-SQL"><a href="#第四模块：MySQL-与-SQL" class="headerlink" title="第四模块：MySQL 与 SQL"></a>第四模块：MySQL 与 SQL</h1><h2 id="4-1-SQL-分类"><a href="#4-1-SQL-分类" class="headerlink" title="4.1 SQL 分类"></a>4.1 SQL 分类</h2><table>
+<thead>
+<tr>
+<th>分类</th>
+<th>名称</th>
+<th>常用语句</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DDL</td>
+<td>数据定义语言</td>
+<td><code>create</code>、<code>alter</code>、<code>drop</code></td>
+</tr>
+<tr>
+<td>DML</td>
+<td>数据操作语言</td>
+<td><code>insert</code>、<code>update</code>、<code>delete</code></td>
+</tr>
+<tr>
+<td>DQL</td>
+<td>数据查询语言</td>
+<td><code>select</code></td>
+</tr>
+<tr>
+<td>DCL</td>
+<td>数据控制语言</td>
+<td><code>grant</code>、<code>revoke</code></td>
+</tr>
+<tr>
+<td>TCL</td>
+<td>事务控制语言</td>
+<td><code>commit</code>、<code>rollback</code></td>
+</tr>
+</tbody></table>
+<h2 id="4-2-DDL：表结构操作"><a href="#4-2-DDL：表结构操作" class="headerlink" title="4.2 DDL：表结构操作"></a>4.2 DDL：表结构操作</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE TABLE</span> dept (</span><br><span class="line">  id <span class="type">INT</span> <span class="keyword">PRIMARY KEY</span> AUTO_INCREMENT,</span><br><span class="line">  name <span class="type">VARCHAR</span>(<span class="number">50</span>) <span class="keyword">NOT NULL</span>,</span><br><span class="line">  create_time DATETIME,</span><br><span class="line">  update_time DATETIME</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>常见字段设计：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>id</code></td>
+<td>主键</td>
+</tr>
+<tr>
+<td><code>create_time</code></td>
+<td>创建时间</td>
+</tr>
+<tr>
+<td><code>update_time</code></td>
+<td>修改时间</td>
+</tr>
+<tr>
+<td><code>is_deleted</code></td>
+<td>逻辑删除标记，可选</td>
+</tr>
+</tbody></table>
+<h2 id="4-3-DML：增删改"><a href="#4-3-DML：增删改" class="headerlink" title="4.3 DML：增删改"></a>4.3 DML：增删改</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT INTO</span> dept(name, create_time, update_time)</span><br><span class="line"><span class="keyword">VALUES</span> (<span class="string">&#x27;教研部&#x27;</span>, NOW(), NOW());</span><br><span class="line"></span><br><span class="line"><span class="keyword">UPDATE</span> dept <span class="keyword">SET</span> name <span class="operator">=</span> <span class="string">&#x27;咨询部&#x27;</span>, update_time <span class="operator">=</span> NOW()</span><br><span class="line"><span class="keyword">WHERE</span> id <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> dept <span class="keyword">WHERE</span> id <span class="operator">=</span> <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<p>注意：<code>update</code> 和 <code>delete</code> 一定要写 <code>where</code>，否则会影响整张表。</p>
+<h2 id="4-4-DQL：查询"><a href="#4-4-DQL：查询" class="headerlink" title="4.4 DQL：查询"></a>4.4 DQL：查询</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> id, name, create_time, update_time</span><br><span class="line"><span class="keyword">FROM</span> dept</span><br><span class="line"><span class="keyword">WHERE</span> name <span class="keyword">LIKE</span> CONCAT(<span class="string">&#x27;%&#x27;</span>, <span class="string">&#x27;教&#x27;</span>, <span class="string">&#x27;%&#x27;</span>)</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> update_time <span class="keyword">DESC</span></span><br><span class="line">LIMIT <span class="number">0</span>, <span class="number">10</span>;</span><br></pre></td></tr></table></figure>
+
+<p>查询执行逻辑可以这样理解：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">from → where → group by → having → select → order by → limit</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-5-多表关系"><a href="#4-5-多表关系" class="headerlink" title="4.5 多表关系"></a>4.5 多表关系</h2><p>常见关系：</p>
+<table>
+<thead>
+<tr>
+<th>关系</th>
+<th>示例</th>
+<th>设计方式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>一对多</td>
+<td>部门 - 员工</td>
+<td>多的一方加外键</td>
+</tr>
+<tr>
+<td>多对多</td>
+<td>学生 - 课程</td>
+<td>中间表</td>
+</tr>
+<tr>
+<td>一对一</td>
+<td>用户 - 用户详情</td>
+<td>任一方加唯一外键</td>
+</tr>
+</tbody></table>
+<h2 id="4-6-多表查询"><a href="#4-6-多表查询" class="headerlink" title="4.6 多表查询"></a>4.6 多表查询</h2><h3 id="内连接"><a href="#内连接" class="headerlink" title="内连接"></a>内连接</h3><p>只查询两张表都匹配的数据。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> e.name, d.name <span class="keyword">AS</span> dept_name</span><br><span class="line"><span class="keyword">FROM</span> emp e</span><br><span class="line"><span class="keyword">JOIN</span> dept d <span class="keyword">ON</span> e.dept_id <span class="operator">=</span> d.id;</span><br></pre></td></tr></table></figure>
+
+<h3 id="左外连接"><a href="#左外连接" class="headerlink" title="左外连接"></a>左外连接</h3><p>左表全部保留，右表匹配不到则为 <code>null</code>。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> e.name, d.name <span class="keyword">AS</span> dept_name</span><br><span class="line"><span class="keyword">FROM</span> emp e</span><br><span class="line"><span class="keyword">LEFT</span> <span class="keyword">JOIN</span> dept d <span class="keyword">ON</span> e.dept_id <span class="operator">=</span> d.id;</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-7-事务与-ACID"><a href="#4-7-事务与-ACID" class="headerlink" title="4.7 事务与 ACID"></a>4.7 事务与 ACID</h2><p>事务保证一组操作要么全部成功，要么全部失败。</p>
+<p>ACID：</p>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Atomicity 原子性</td>
+<td>要么全成功，要么全失败</td>
+</tr>
+<tr>
+<td>Consistency 一致性</td>
+<td>事务前后数据状态合法</td>
+</tr>
+<tr>
+<td>Isolation 隔离性</td>
+<td>并发事务互不干扰</td>
+</tr>
+<tr>
+<td>Durability 持久性</td>
+<td>提交后永久保存</td>
+</tr>
+</tbody></table>
+<p>典型场景：新增员工时同时保存员工基本信息和员工工作经历，如果其中一个失败，应全部回滚。</p>
+<h2 id="4-8-索引"><a href="#4-8-索引" class="headerlink" title="4.8 索引"></a>4.8 索引</h2><p>索引用于提升查询效率，底层常见结构是 B+Tree。</p>
+<p>适合建索引的字段：</p>
+<ul>
+<li>经常作为查询条件的字段。</li>
+<li>经常排序的字段。</li>
+<li>经常用于连接的字段。</li>
+</ul>
+<p>不适合建索引：</p>
+<ul>
+<li>区分度很低的字段。</li>
+<li>经常频繁更新的字段。</li>
+<li>数据量很小的表。</li>
+</ul>
+<hr>
+<h1 id="第五模块：JDBC、连接池与-MyBatis"><a href="#第五模块：JDBC、连接池与-MyBatis" class="headerlink" title="第五模块：JDBC、连接池与 MyBatis"></a>第五模块：JDBC、连接池与 MyBatis</h1><h2 id="5-1-JDBC-基本流程"><a href="#5-1-JDBC-基本流程" class="headerlink" title="5.1 JDBC 基本流程"></a>5.1 JDBC 基本流程</h2><p>JDBC 是 Java 操作数据库的基础 API。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">注册驱动</span><br><span class="line">  ↓</span><br><span class="line">获取连接 Connection</span><br><span class="line">  ↓</span><br><span class="line">创建 PreparedStatement</span><br><span class="line">  ↓</span><br><span class="line">执行 SQL</span><br><span class="line">  ↓</span><br><span class="line">处理 ResultSet</span><br><span class="line">  ↓</span><br><span class="line">释放资源</span><br></pre></td></tr></table></figure>
+
+<p>真实项目很少直接手写 JDBC，因为代码重复且容易出错。</p>
+<h2 id="5-2-PreparedStatement"><a href="#5-2-PreparedStatement" class="headerlink" title="5.2 PreparedStatement"></a>5.2 PreparedStatement</h2><p>相比 <code>Statement</code>，<code>PreparedStatement</code> 更推荐：</p>
+<ul>
+<li>防止 SQL 注入。</li>
+<li>预编译 SQL，性能更好。</li>
+<li>参数设置更清晰。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">PreparedStatement</span> <span class="variable">ps</span> <span class="operator">=</span> conn.prepareStatement(<span class="string">&quot;select * from emp where username = ?&quot;</span>);</span><br><span class="line">ps.setString(<span class="number">1</span>, username);</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-3-连接池"><a href="#5-3-连接池" class="headerlink" title="5.3 连接池"></a>5.3 连接池</h2><p>数据库连接创建成本高，连接池用于复用连接。</p>
+<p>常见连接池：</p>
+<ul>
+<li>HikariCP：SpringBoot 默认。</li>
+<li>Druid：国内常见。</li>
+</ul>
+<p>连接池核心思想：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">启动时创建一批连接</span><br><span class="line">请求来了从池中取连接</span><br><span class="line">用完归还连接</span><br><span class="line">避免频繁创建和销毁</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-4-MyBatis-入门"><a href="#5-4-MyBatis-入门" class="headerlink" title="5.4 MyBatis 入门"></a>5.4 MyBatis 入门</h2><p>MyBatis 简化 JDBC，让开发者主要写 SQL 和结果映射。</p>
+<p>Mapper 示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Mapper</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">DeptMapper</span> &#123;</span><br><span class="line">    <span class="meta">@Select(&quot;select * from dept&quot;)</span></span><br><span class="line">    List&lt;Dept&gt; <span class="title function_">list</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>调用链：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Service 调用 Mapper 接口</span><br><span class="line">  ↓</span><br><span class="line">MyBatis 生成代理对象</span><br><span class="line">  ↓</span><br><span class="line">执行 SQL</span><br><span class="line">  ↓</span><br><span class="line">封装结果为 Java 对象</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-5-和-区别"><a href="#5-5-和-区别" class="headerlink" title="5.5 #{} 和 ${} 区别"></a>5.5 <code>#{}</code> 和 <code>${}</code> 区别</h2><table>
+<thead>
+<tr>
+<th>写法</th>
+<th>本质</th>
+<th>是否安全</th>
+<th>场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>#{}</code></td>
+<td>预编译参数占位符</td>
+<td>安全</td>
+<td>普通参数</td>
+</tr>
+<tr>
+<td><code>${}</code></td>
+<td>字符串拼接</td>
+<td>不安全</td>
+<td>表名、排序字段等少数场景</td>
+</tr>
+</tbody></table>
+<p>绝大多数情况下使用 <code>#{}</code>。</p>
+<h2 id="5-6-XML-映射"><a href="#5-6-XML-映射" class="headerlink" title="5.6 XML 映射"></a>5.6 XML 映射</h2><p>复杂 SQL 通常写在 XML 中：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mapper</span> <span class="attr">namespace</span>=<span class="string">&quot;com.tlias.mapper.EmpMapper&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;list&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;com.tlias.pojo.Emp&quot;</span>&gt;</span></span><br><span class="line">    select * from emp</span><br><span class="line">  <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mapper</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>XML 三要素：</p>
+<ul>
+<li><code>namespace</code> 对应 Mapper 接口全类名。</li>
+<li><code>id</code> 对应 Mapper 方法名。</li>
+<li>参数和返回值要匹配。</li>
+</ul>
+<h2 id="5-7-动态-SQL"><a href="#5-7-动态-SQL" class="headerlink" title="5.7 动态 SQL"></a>5.7 动态 SQL</h2><p>动态 SQL 根据条件拼接 SQL。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;list&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;Emp&quot;</span>&gt;</span></span><br><span class="line">  select * from emp</span><br><span class="line">  <span class="tag">&lt;<span class="name">where</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">if</span> <span class="attr">test</span>=<span class="string">&quot;name != null and name != &#x27;&#x27;&quot;</span>&gt;</span></span><br><span class="line">      name like concat(&#x27;%&#x27;, #&#123;name&#125;, &#x27;%&#x27;)</span><br><span class="line">    <span class="tag">&lt;/<span class="name">if</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">where</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>常用标签：</p>
+<table>
+<thead>
+<tr>
+<th>标签</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>if</code></td>
+<td>条件判断</td>
+</tr>
+<tr>
+<td><code>where</code></td>
+<td>自动处理 where 和 and</td>
+</tr>
+<tr>
+<td><code>set</code></td>
+<td>自动处理 update 逗号</td>
+</tr>
+<tr>
+<td><code>foreach</code></td>
+<td>遍历集合，常用于批量删除</td>
+</tr>
+<tr>
+<td><code>sql</code> &#x2F; <code>include</code></td>
+<td>SQL 片段复用</td>
+</tr>
+</tbody></table>
+<hr>
+<h1 id="第六模块：统一结果与-RESTful-CRUD"><a href="#第六模块：统一结果与-RESTful-CRUD" class="headerlink" title="第六模块：统一结果与 RESTful CRUD"></a>第六模块：统一结果与 RESTful CRUD</h1><h2 id="6-1-统一响应结果"><a href="#6-1-统一响应结果" class="headerlink" title="6.1 统一响应结果"></a>6.1 统一响应结果</h2><p>前后端联调时，建议后端统一返回结构：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Result</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> Integer code;</span><br><span class="line">    <span class="keyword">private</span> String msg;</span><br><span class="line">    <span class="keyword">private</span> Object data;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>示例 JSON：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;code&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;msg&quot;</span><span class="punctuation">:</span> <span class="string">&quot;success&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;data&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>好处：</p>
+<ul>
+<li>前端处理更统一。</li>
+<li>成功失败有标准。</li>
+<li>方便扩展错误信息。</li>
+</ul>
+<h2 id="6-2-部门管理-CRUD"><a href="#6-2-部门管理-CRUD" class="headerlink" title="6.2 部门管理 CRUD"></a>6.2 部门管理 CRUD</h2><table>
+<thead>
+<tr>
+<th>功能</th>
+<th>请求方式</th>
+<th>路径</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>查询部门</td>
+<td>GET</td>
+<td><code>/depts</code></td>
+</tr>
+<tr>
+<td>删除部门</td>
+<td>DELETE</td>
+<td><code>/depts/{id}</code></td>
+</tr>
+<tr>
+<td>新增部门</td>
+<td>POST</td>
+<td><code>/depts</code></td>
+</tr>
+<tr>
+<td>修改部门</td>
+<td>PUT</td>
+<td><code>/depts</code></td>
+</tr>
+</tbody></table>
+<p>Controller 示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/depts&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DeptController</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> DeptService deptService;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">DeptController</span><span class="params">(DeptService deptService)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.deptService = deptService;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping</span></span><br><span class="line">    <span class="keyword">public</span> Result <span class="title function_">list</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> Result.success(deptService.list());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="6-3-参数接收"><a href="#6-3-参数接收" class="headerlink" title="6.3 参数接收"></a>6.3 参数接收</h2><table>
+<thead>
+<tr>
+<th>注解</th>
+<th>接收位置</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>@PathVariable</code></td>
+<td>路径参数</td>
+<td><code>/depts/{id}</code></td>
+</tr>
+<tr>
+<td><code>@RequestParam</code></td>
+<td>查询参数</td>
+<td><code>?name=Tom</code></td>
+</tr>
+<tr>
+<td><code>@RequestBody</code></td>
+<td>JSON 请求体</td>
+<td>新增、修改对象</td>
+</tr>
+<tr>
+<td><code>@RequestHeader</code></td>
+<td>请求头</td>
+<td>token</td>
+</tr>
+</tbody></table>
+<h2 id="6-4-时间字段处理"><a href="#6-4-时间字段处理" class="headerlink" title="6.4 时间字段处理"></a>6.4 时间字段处理</h2><p>新增数据时：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">createTime = now</span><br><span class="line">updateTime = now</span><br></pre></td></tr></table></figure>
+
+<p>修改数据时：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">updateTime = now</span><br></pre></td></tr></table></figure>
+
+<p>常见错误是只保存业务字段，忘记维护创建时间和修改时间。</p>
+<hr>
+<h1 id="第七模块：分页、条件查询与多表业务"><a href="#第七模块：分页、条件查询与多表业务" class="headerlink" title="第七模块：分页、条件查询与多表业务"></a>第七模块：分页、条件查询与多表业务</h1><h2 id="7-1-分页查询"><a href="#7-1-分页查询" class="headerlink" title="7.1 分页查询"></a>7.1 分页查询</h2><p>分页核心参数：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>page</code></td>
+<td>当前页码</td>
+</tr>
+<tr>
+<td><code>pageSize</code></td>
+<td>每页条数</td>
+</tr>
+<tr>
+<td><code>total</code></td>
+<td>总记录数</td>
+</tr>
+<tr>
+<td><code>rows</code></td>
+<td>当前页数据</td>
+</tr>
+</tbody></table>
+<p>统一分页返回：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">PageBean</span>&lt;T&gt; &#123;</span><br><span class="line">    <span class="keyword">private</span> Long total;</span><br><span class="line">    <span class="keyword">private</span> List&lt;T&gt; rows;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="7-2-PageHelper-分页"><a href="#7-2-PageHelper-分页" class="headerlink" title="7.2 PageHelper 分页"></a>7.2 PageHelper 分页</h2><p>典型流程：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">PageHelper.startPage(page, pageSize);</span><br><span class="line">List&lt;Emp&gt; list = empMapper.list(param);</span><br><span class="line">Page&lt;Emp&gt; p = (Page&lt;Emp&gt;) list;</span><br><span class="line"><span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">PageBean</span>&lt;&gt;(p.getTotal(), p.getResult());</span><br></pre></td></tr></table></figure>
+
+<p>注意：<code>PageHelper.startPage</code> 必须紧跟查询语句，中间不要夹杂其他查询。</p>
+<h2 id="7-3-条件分页查询"><a href="#7-3-条件分页查询" class="headerlink" title="7.3 条件分页查询"></a>7.3 条件分页查询</h2><p>员工查询常见条件：</p>
+<ul>
+<li>姓名。</li>
+<li>性别。</li>
+<li>入职开始时间。</li>
+<li>入职结束时间。</li>
+<li>部门 ID。</li>
+</ul>
+<p>SQL 要点：</p>
+<ul>
+<li>条件为空时不能拼接。</li>
+<li>日期范围要处理开始和结束。</li>
+<li>多表查询要避免字段名冲突。</li>
+</ul>
+<h2 id="7-4-多表结果封装"><a href="#7-4-多表结果封装" class="headerlink" title="7.4 多表结果封装"></a>7.4 多表结果封装</h2><p>员工表中有 <code>dept_id</code>，页面需要展示部门名称，通常使用连接查询：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> e.<span class="operator">*</span>, d.name <span class="keyword">AS</span> dept_name</span><br><span class="line"><span class="keyword">FROM</span> emp e</span><br><span class="line"><span class="keyword">LEFT</span> <span class="keyword">JOIN</span> dept d <span class="keyword">ON</span> e.dept_id <span class="operator">=</span> d.id</span><br></pre></td></tr></table></figure>
+
+<p>Java 对象中可以额外定义 <code>deptName</code> 字段接收查询结果。</p>
+<hr>
+<h1 id="第八模块：项目实战业务模块"><a href="#第八模块：项目实战业务模块" class="headerlink" title="第八模块：项目实战业务模块"></a>第八模块：项目实战业务模块</h1><h2 id="8-1-部门管理"><a href="#8-1-部门管理" class="headerlink" title="8.1 部门管理"></a>8.1 部门管理</h2><p>核心逻辑：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Controller 接收请求</span><br><span class="line">  ↓</span><br><span class="line">Service 处理业务，如补全时间</span><br><span class="line">  ↓</span><br><span class="line">Mapper 执行 SQL</span><br><span class="line">  ↓</span><br><span class="line">返回统一 Result</span><br></pre></td></tr></table></figure>
+
+<p>注意事项：</p>
+<ul>
+<li>删除部门前可考虑是否有关联员工。</li>
+<li>修改部门要更新 <code>updateTime</code>。</li>
+<li>查询时注意字段驼峰映射。</li>
+</ul>
+<h2 id="8-2-员工管理"><a href="#8-2-员工管理" class="headerlink" title="8.2 员工管理"></a>8.2 员工管理</h2><p>员工模块比部门复杂，包含：</p>
+<ul>
+<li>条件分页查询。</li>
+<li>新增员工。</li>
+<li>删除员工。</li>
+<li>修改员工。</li>
+<li>查询回显。</li>
+<li>员工信息统计。</li>
+<li>员工工作经历。</li>
+</ul>
+<p>新增员工典型流程：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">接收员工基本信息和经历列表</span><br><span class="line">  ↓</span><br><span class="line">保存员工主表</span><br><span class="line">  ↓</span><br><span class="line">获取员工 id</span><br><span class="line">  ↓</span><br><span class="line">批量保存经历表</span><br><span class="line">  ↓</span><br><span class="line">加事务保证一致性</span><br></pre></td></tr></table></figure>
+
+<h2 id="8-3-班级管理"><a href="#8-3-班级管理" class="headerlink" title="8.3 班级管理"></a>8.3 班级管理</h2><p>班级模块常见功能：</p>
+<ul>
+<li>查询班级列表。</li>
+<li>新增班级。</li>
+<li>修改班级。</li>
+<li>删除班级。</li>
+<li>根据班级状态展示信息。</li>
+</ul>
+<p>班级通常与学员是一对多关系。</p>
+<h2 id="8-4-学员管理"><a href="#8-4-学员管理" class="headerlink" title="8.4 学员管理"></a>8.4 学员管理</h2><p>学员模块常见功能：</p>
+<ul>
+<li>分页查询学员。</li>
+<li>新增学员。</li>
+<li>修改学员。</li>
+<li>删除学员。</li>
+<li>违纪处理。</li>
+</ul>
+<p>业务注意：</p>
+<ul>
+<li>学员属于班级。</li>
+<li>查询时要展示班级名称。</li>
+<li>新增&#x2F;修改要校验班级是否存在。</li>
+</ul>
+<h2 id="8-5-统计报表"><a href="#8-5-统计报表" class="headerlink" title="8.5 统计报表"></a>8.5 统计报表</h2><p>统计接口通常返回图表需要的数据：</p>
+<ul>
+<li>员工职位人数统计。</li>
+<li>员工性别统计。</li>
+<li>学员学历统计。</li>
+<li>班级人数统计。</li>
+</ul>
+<p>返回结构可以根据前端图表组件设计，例如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">JobOption</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> List&lt;String&gt; jobList;</span><br><span class="line">    <span class="keyword">private</span> List&lt;Integer&gt; dataList;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="第九模块：事务管理"><a href="#第九模块：事务管理" class="headerlink" title="第九模块：事务管理"></a>第九模块：事务管理</h1><h2 id="9-1-为什么需要事务"><a href="#9-1-为什么需要事务" class="headerlink" title="9.1 为什么需要事务"></a>9.1 为什么需要事务</h2><p>当一个业务包含多条 SQL 时，只成功一部分会导致数据不一致。</p>
+<p>例：新增员工时：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">插入 emp 成功</span><br><span class="line">插入 emp_expr 失败</span><br></pre></td></tr></table></figure>
+
+<p>如果没有事务，就会出现员工存在但经历不存在的不完整数据。</p>
+<h2 id="9-2-Spring-事务"><a href="#9-2-Spring-事务" class="headerlink" title="9.2 Spring 事务"></a>9.2 Spring 事务</h2><p>在业务方法上加：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Transactional</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">save</span><span class="params">(Emp emp)</span> &#123;</span><br><span class="line">    <span class="comment">// 保存员工</span></span><br><span class="line">    <span class="comment">// 保存员工经历</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>重点：</p>
+<ul>
+<li><code>@Transactional</code> 通常加在 Service 层。</li>
+<li>默认遇到运行时异常回滚。</li>
+<li>方法必须由 Spring 管理的 Bean 调用才生效。</li>
+</ul>
+<h2 id="9-3-事务失效常见原因"><a href="#9-3-事务失效常见原因" class="headerlink" title="9.3 事务失效常见原因"></a>9.3 事务失效常见原因</h2><table>
+<thead>
+<tr>
+<th>原因</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>方法不是 public</td>
+<td>代理可能不生效</td>
+</tr>
+<tr>
+<td>同类内部方法调用</td>
+<td>没经过代理对象</td>
+</tr>
+<tr>
+<td>异常被捕获未抛出</td>
+<td>Spring 不知道失败</td>
+</tr>
+<tr>
+<td>抛出受检异常</td>
+<td>默认不回滚，需配置 <code>rollbackFor</code></td>
+</tr>
+<tr>
+<td>类没有交给 Spring 管理</td>
+<td>没有事务代理</td>
+</tr>
+</tbody></table>
+<hr>
+<h1 id="第十模块：文件上传"><a href="#第十模块：文件上传" class="headerlink" title="第十模块：文件上传"></a>第十模块：文件上传</h1><h2 id="10-1-上传流程"><a href="#10-1-上传流程" class="headerlink" title="10.1 上传流程"></a>10.1 上传流程</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">前端选择文件</span><br><span class="line">  ↓</span><br><span class="line">以 multipart/form-data 提交</span><br><span class="line">  ↓</span><br><span class="line">后端 MultipartFile 接收</span><br><span class="line">  ↓</span><br><span class="line">生成唯一文件名</span><br><span class="line">  ↓</span><br><span class="line">保存到本地或 OSS</span><br><span class="line">  ↓</span><br><span class="line">返回文件访问 URL</span><br></pre></td></tr></table></figure>
+
+<p>Controller 示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@PostMapping(&quot;/upload&quot;)</span></span><br><span class="line"><span class="keyword">public</span> Result <span class="title function_">upload</span><span class="params">(MultipartFile file)</span> &#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">url</span> <span class="operator">=</span> uploadService.upload(file);</span><br><span class="line">    <span class="keyword">return</span> Result.success(url);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="10-2-文件名处理"><a href="#10-2-文件名处理" class="headerlink" title="10.2 文件名处理"></a>10.2 文件名处理</h2><p>不能直接使用原文件名，可能重复或包含特殊字符。</p>
+<p>推荐：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UUID + 原文件后缀</span><br></pre></td></tr></table></figure>
+
+<h2 id="10-3-本地存储-vs-对象存储"><a href="#10-3-本地存储-vs-对象存储" class="headerlink" title="10.3 本地存储 vs 对象存储"></a>10.3 本地存储 vs 对象存储</h2><table>
+<thead>
+<tr>
+<th>方式</th>
+<th>优点</th>
+<th>缺点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>本地存储</td>
+<td>简单</td>
+<td>不适合多服务器，迁移麻烦</td>
+</tr>
+<tr>
+<td>OSS</td>
+<td>稳定、可公网访问</td>
+<td>需要配置密钥、Bucket</td>
+</tr>
+</tbody></table>
+<hr>
+<h1 id="第十一模块：异常处理与参数校验"><a href="#第十一模块：异常处理与参数校验" class="headerlink" title="第十一模块：异常处理与参数校验"></a>第十一模块：异常处理与参数校验</h1><h2 id="11-1-为什么要统一异常处理"><a href="#11-1-为什么要统一异常处理" class="headerlink" title="11.1 为什么要统一异常处理"></a>11.1 为什么要统一异常处理</h2><p>如果每个 Controller 都手动 <code>try-catch</code>，代码会重复且混乱。</p>
+<p>统一异常处理可以：</p>
+<ul>
+<li>集中处理系统异常。</li>
+<li>返回统一错误格式。</li>
+<li>避免把堆栈信息暴露给前端。</li>
+</ul>
+<h2 id="11-2-全局异常处理"><a href="#11-2-全局异常处理" class="headerlink" title="11.2 全局异常处理"></a>11.2 全局异常处理</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestControllerAdvice</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">GlobalExceptionHandler</span> &#123;</span><br><span class="line">    <span class="meta">@ExceptionHandler(Exception.class)</span></span><br><span class="line">    <span class="keyword">public</span> Result <span class="title function_">handle</span><span class="params">(Exception e)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> Result.error(<span class="string">&quot;服务器异常，请联系管理员&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>常见可以细分处理：</p>
+<ul>
+<li>参数校验异常。</li>
+<li>业务异常。</li>
+<li>数据库异常。</li>
+<li>未登录异常。</li>
+</ul>
+<h2 id="11-3-参数校验思路"><a href="#11-3-参数校验思路" class="headerlink" title="11.3 参数校验思路"></a>11.3 参数校验思路</h2><p>后端不能只依赖前端校验，重要字段要在后端再次校验：</p>
+<ul>
+<li>必填字段不能为空。</li>
+<li>日期范围是否合法。</li>
+<li>ID 是否存在。</li>
+<li>用户是否有权限操作。</li>
+</ul>
+<hr>
+<h1 id="第十二模块：日志系统-Logback"><a href="#第十二模块：日志系统-Logback" class="headerlink" title="第十二模块：日志系统 Logback"></a>第十二模块：日志系统 Logback</h1><h2 id="12-1-为什么需要日志"><a href="#12-1-为什么需要日志" class="headerlink" title="12.1 为什么需要日志"></a>12.1 为什么需要日志</h2><p>日志用于：</p>
+<ul>
+<li>查看程序运行状态。</li>
+<li>定位错误。</li>
+<li>记录关键业务操作。</li>
+<li>线上问题排查。</li>
+</ul>
+<h2 id="12-2-日志级别"><a href="#12-2-日志级别" class="headerlink" title="12.2 日志级别"></a>12.2 日志级别</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TRACE &lt; DEBUG &lt; INFO &lt; WARN &lt; ERROR</span><br></pre></td></tr></table></figure>
+
+<p>常用：</p>
+<ul>
+<li>开发环境：<code>DEBUG</code>。</li>
+<li>生产环境：<code>INFO</code> 或 <code>WARN</code>。</li>
+<li>异常：<code>ERROR</code>。</li>
+</ul>
+<h2 id="12-3-日志使用方式"><a href="#12-3-日志使用方式" class="headerlink" title="12.3 日志使用方式"></a>12.3 日志使用方式</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Logger</span> <span class="variable">log</span> <span class="operator">=</span> LoggerFactory.getLogger(DeptController.class);</span><br><span class="line"></span><br><span class="line">log.info(<span class="string">&quot;查询部门列表&quot;</span>);</span><br><span class="line">log.error(<span class="string">&quot;删除部门失败&quot;</span>, e);</span><br></pre></td></tr></table></figure>
+
+<p>注意：</p>
+<ul>
+<li>不要用 <code>System.out.println</code> 代替日志。</li>
+<li>日志不要输出密码、密钥等敏感信息。</li>
+<li>高频接口日志要控制数量。</li>
+</ul>
+<hr>
+<h1 id="第十三模块：登录认证、JWT、Filter、Interceptor"><a href="#第十三模块：登录认证、JWT、Filter、Interceptor" class="headerlink" title="第十三模块：登录认证、JWT、Filter、Interceptor"></a>第十三模块：登录认证、JWT、Filter、Interceptor</h1><h2 id="13-1-登录认证流程"><a href="#13-1-登录认证流程" class="headerlink" title="13.1 登录认证流程"></a>13.1 登录认证流程</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">用户提交用户名密码</span><br><span class="line">  ↓</span><br><span class="line">后端查询用户并校验密码</span><br><span class="line">  ↓</span><br><span class="line">校验成功生成 JWT</span><br><span class="line">  ↓</span><br><span class="line">前端保存 token</span><br><span class="line">  ↓</span><br><span class="line">后续请求在请求头携带 token</span><br><span class="line">  ↓</span><br><span class="line">后端解析 token</span><br><span class="line">  ↓</span><br><span class="line">合法则放行，非法则返回 401</span><br></pre></td></tr></table></figure>
+
+<h2 id="13-2-JWT-结构"><a href="#13-2-JWT-结构" class="headerlink" title="13.2 JWT 结构"></a>13.2 JWT 结构</h2><p>JWT 由三部分组成：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Header.Payload.Signature</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>部分</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Header</td>
+<td>算法和 token 类型</td>
+</tr>
+<tr>
+<td>Payload</td>
+<td>用户信息、过期时间等声明</td>
+</tr>
+<tr>
+<td>Signature</td>
+<td>签名，防止篡改</td>
+</tr>
+</tbody></table>
+<p>JWT 特点：</p>
+<ul>
+<li>服务端可以无状态校验。</li>
+<li>token 中不要存敏感信息。</li>
+<li>必须设置过期时间。</li>
+</ul>
+<h2 id="13-3-Filter-过滤器"><a href="#13-3-Filter-过滤器" class="headerlink" title="13.3 Filter 过滤器"></a>13.3 Filter 过滤器</h2><p>Filter 属于 Servlet 规范，执行位置更靠前。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">请求 → Filter → DispatcherServlet → Controller</span><br></pre></td></tr></table></figure>
+
+<p>适合处理：</p>
+<ul>
+<li>登录校验。</li>
+<li>编码处理。</li>
+<li>通用请求日志。</li>
+</ul>
+<h2 id="13-4-Interceptor-拦截器"><a href="#13-4-Interceptor-拦截器" class="headerlink" title="13.4 Interceptor 拦截器"></a>13.4 Interceptor 拦截器</h2><p>Interceptor 属于 SpringMVC。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">请求 → DispatcherServlet → Interceptor → Controller</span><br></pre></td></tr></table></figure>
+
+<p>常用方法：</p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>时机</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>preHandle</code></td>
+<td>Controller 执行前</td>
+</tr>
+<tr>
+<td><code>postHandle</code></td>
+<td>Controller 执行后，视图渲染前</td>
+</tr>
+<tr>
+<td><code>afterCompletion</code></td>
+<td>请求完成后</td>
+</tr>
+</tbody></table>
+<h2 id="13-5-Filter-和-Interceptor-区别"><a href="#13-5-Filter-和-Interceptor-区别" class="headerlink" title="13.5 Filter 和 Interceptor 区别"></a>13.5 Filter 和 Interceptor 区别</h2><table>
+<thead>
+<tr>
+<th>对比</th>
+<th>Filter</th>
+<th>Interceptor</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>规范</td>
+<td>Servlet</td>
+<td>SpringMVC</td>
+</tr>
+<tr>
+<td>执行时机</td>
+<td>更早</td>
+<td>DispatcherServlet 之后</td>
+</tr>
+<tr>
+<td>管理范围</td>
+<td>几乎所有请求</td>
+<td>SpringMVC 请求</td>
+</tr>
+<tr>
+<td>依赖 Spring</td>
+<td>不一定</td>
+<td>是</td>
+</tr>
+</tbody></table>
+<hr>
+<h1 id="第十四模块：AOP-面向切面编程"><a href="#第十四模块：AOP-面向切面编程" class="headerlink" title="第十四模块：AOP 面向切面编程"></a>第十四模块：AOP 面向切面编程</h1><h2 id="14-1-AOP-解决什么问题"><a href="#14-1-AOP-解决什么问题" class="headerlink" title="14.1 AOP 解决什么问题"></a>14.1 AOP 解决什么问题</h2><p>AOP 用来处理与业务无关但很多地方都需要的横切逻辑。</p>
+<p>例如：</p>
+<ul>
+<li>操作日志。</li>
+<li>权限校验。</li>
+<li>性能统计。</li>
+<li>事务管理。</li>
+<li>异常监控。</li>
+</ul>
+<p>不使用 AOP：每个方法都写重复代码。<br>使用 AOP：把重复逻辑抽到切面中统一处理。</p>
+<h2 id="14-2-AOP-核心概念"><a href="#14-2-AOP-核心概念" class="headerlink" title="14.2 AOP 核心概念"></a>14.2 AOP 核心概念</h2><table>
+<thead>
+<tr>
+<th>概念</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>JoinPoint</td>
+<td>连接点，可被增强的方法</td>
+</tr>
+<tr>
+<td>Pointcut</td>
+<td>切入点，真正要增强的方法范围</td>
+</tr>
+<tr>
+<td>Advice</td>
+<td>通知，增强逻辑</td>
+</tr>
+<tr>
+<td>Aspect</td>
+<td>切面，切入点 + 通知</td>
+</tr>
+<tr>
+<td>Target</td>
+<td>目标对象</td>
+</tr>
+<tr>
+<td>Proxy</td>
+<td>代理对象</td>
+</tr>
+</tbody></table>
+<h2 id="14-3-通知类型"><a href="#14-3-通知类型" class="headerlink" title="14.3 通知类型"></a>14.3 通知类型</h2><table>
+<thead>
+<tr>
+<th>通知</th>
+<th>执行时机</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>@Before</code></td>
+<td>方法执行前</td>
+</tr>
+<tr>
+<td><code>@After</code></td>
+<td>方法执行后，无论成功失败</td>
+</tr>
+<tr>
+<td><code>@AfterReturning</code></td>
+<td>方法成功返回后</td>
+</tr>
+<tr>
+<td><code>@AfterThrowing</code></td>
+<td>方法抛异常后</td>
+</tr>
+<tr>
+<td><code>@Around</code></td>
+<td>环绕通知，最强大</td>
+</tr>
+</tbody></table>
+<h2 id="14-4-操作日志案例"><a href="#14-4-操作日志案例" class="headerlink" title="14.4 操作日志案例"></a>14.4 操作日志案例</h2><p>常见做法：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">自定义 @LogOperation 注解</span><br><span class="line">  ↓</span><br><span class="line">Controller 方法标注注解</span><br><span class="line">  ↓</span><br><span class="line">AOP 环绕通知拦截</span><br><span class="line">  ↓</span><br><span class="line">记录操作人、操作时间、方法名、参数、返回值、耗时</span><br><span class="line">  ↓</span><br><span class="line">保存到 operate_log 表</span><br></pre></td></tr></table></figure>
+
+<p>环绕通知伪代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Around(&quot;@annotation(com.tlias.anno.LogOperation)&quot;)</span></span><br><span class="line"><span class="keyword">public</span> Object <span class="title function_">recordLog</span><span class="params">(ProceedingJoinPoint joinPoint)</span> <span class="keyword">throws</span> Throwable &#123;</span><br><span class="line">    <span class="type">long</span> <span class="variable">begin</span> <span class="operator">=</span> System.currentTimeMillis();</span><br><span class="line">    <span class="type">Object</span> <span class="variable">result</span> <span class="operator">=</span> joinPoint.proceed();</span><br><span class="line">    <span class="type">long</span> <span class="variable">cost</span> <span class="operator">=</span> System.currentTimeMillis() - begin;</span><br><span class="line">    <span class="comment">// 保存日志</span></span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="第十五模块：SpringBoot-配置与原理"><a href="#第十五模块：SpringBoot-配置与原理" class="headerlink" title="第十五模块：SpringBoot 配置与原理"></a>第十五模块：SpringBoot 配置与原理</h1><h2 id="15-1-配置文件"><a href="#15-1-配置文件" class="headerlink" title="15.1 配置文件"></a>15.1 配置文件</h2><p>SpringBoot 常用配置文件：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">application.properties</span><br><span class="line">application.yml</span><br><span class="line">application.yaml</span><br></pre></td></tr></table></figure>
+
+<p>推荐使用 <code>application.yml</code>，层级清晰：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server:</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">8080</span></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">datasource:</span></span><br><span class="line">    <span class="attr">url:</span> <span class="string">jdbc:mysql://localhost:3306/tlias</span></span><br><span class="line">    <span class="attr">username:</span> <span class="string">root</span></span><br><span class="line">    <span class="attr">password:</span> <span class="number">123456</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="15-2-配置优先级"><a href="#15-2-配置优先级" class="headerlink" title="15.2 配置优先级"></a>15.2 配置优先级</h2><p>常见优先级从低到高：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">application.yaml</span><br><span class="line">application.yml</span><br><span class="line">application.properties</span><br><span class="line">Java 系统属性 -Dkey=value</span><br><span class="line">命令行参数 --key=value</span><br></pre></td></tr></table></figure>
+
+<p>命令行参数优先级最高。</p>
+<h2 id="15-3-Bean-作用域"><a href="#15-3-Bean-作用域" class="headerlink" title="15.3 Bean 作用域"></a>15.3 Bean 作用域</h2><table>
+<thead>
+<tr>
+<th>作用域</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>singleton</td>
+<td>默认，容器中一个实例</td>
+</tr>
+<tr>
+<td>prototype</td>
+<td>每次获取创建新实例</td>
+</tr>
+<tr>
+<td>request</td>
+<td>每个请求一个实例</td>
+</tr>
+<tr>
+<td>session</td>
+<td>每个会话一个实例</td>
+</tr>
+<tr>
+<td>application</td>
+<td>Web 应用级别共享</td>
+</tr>
+</tbody></table>
+<p>大多数业务 Bean 使用默认单例即可。</p>
+<h2 id="15-4-第三方-Bean"><a href="#15-4-第三方-Bean" class="headerlink" title="15.4 第三方 Bean"></a>15.4 第三方 Bean</h2><p>第三方类不能直接加 <code>@Component</code>，可以用 <code>@Bean</code> 注册：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">OssConfig</span> &#123;</span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> AliyunOSSOperator <span class="title function_">aliyunOSSOperator</span><span class="params">(AliyunOSSProperties properties)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">AliyunOSSOperator</span>(properties);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="15-5-SpringBootApplication"><a href="#15-5-SpringBootApplication" class="headerlink" title="15.5 @SpringBootApplication"></a>15.5 <code>@SpringBootApplication</code></h2><p>它是组合注解：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">@SpringBootConfiguration</span><br><span class="line">@ComponentScan</span><br><span class="line">@EnableAutoConfiguration</span><br></pre></td></tr></table></figure>
+
+<p>作用：</p>
+<ul>
+<li>声明当前类是配置类。</li>
+<li>扫描当前包及子包 Bean。</li>
+<li>开启自动配置。</li>
+</ul>
+<h2 id="15-6-起步依赖原理"><a href="#15-6-起步依赖原理" class="headerlink" title="15.6 起步依赖原理"></a>15.6 起步依赖原理</h2><p>例如引入：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>会通过 Maven 依赖传递自动引入：</p>
+<ul>
+<li>SpringMVC。</li>
+<li>内嵌 Tomcat。</li>
+<li>JSON 处理。</li>
+<li>参数校验等相关依赖。</li>
+</ul>
+<p>起步依赖本质：帮你把一组常用依赖打包管理。</p>
+<h2 id="15-7-自动配置原理"><a href="#15-7-自动配置原理" class="headerlink" title="15.7 自动配置原理"></a>15.7 自动配置原理</h2><p>自动配置大致流程：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">@SpringBootApplication</span><br><span class="line">  ↓</span><br><span class="line">@EnableAutoConfiguration</span><br><span class="line">  ↓</span><br><span class="line">读取 AutoConfiguration.imports</span><br><span class="line">  ↓</span><br><span class="line">加载自动配置类</span><br><span class="line">  ↓</span><br><span class="line">根据 @Conditional 条件判断是否生效</span><br><span class="line">  ↓</span><br><span class="line">注册 Bean</span><br></pre></td></tr></table></figure>
+
+<p>常见条件注解：</p>
+<table>
+<thead>
+<tr>
+<th>注解</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>@ConditionalOnClass</code></td>
+<td>类路径下有某个类才生效</td>
+</tr>
+<tr>
+<td><code>@ConditionalOnMissingBean</code></td>
+<td>容器中没有某个 Bean 才生效</td>
+</tr>
+<tr>
+<td><code>@ConditionalOnProperty</code></td>
+<td>配置属性满足条件才生效</td>
+</tr>
+</tbody></table>
+<hr>
+<h1 id="第十六模块：Maven-高级与多模块项目"><a href="#第十六模块：Maven-高级与多模块项目" class="headerlink" title="第十六模块：Maven 高级与多模块项目"></a>第十六模块：Maven 高级与多模块项目</h1><h2 id="16-1-为什么分模块"><a href="#16-1-为什么分模块" class="headerlink" title="16.1 为什么分模块"></a>16.1 为什么分模块</h2><p>当项目变大后，一个模块会出现：</p>
+<ul>
+<li>代码混杂。</li>
+<li>依赖混乱。</li>
+<li>复用困难。</li>
+<li>打包部署不清晰。</li>
+</ul>
+<p>分模块可以按职责拆分，例如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">tlias-parent</span><br><span class="line">  ├── tlias-pojo   实体类</span><br><span class="line">  ├── tlias-utils  工具类</span><br><span class="line">  └── tlias-web    Web 启动与业务模块</span><br></pre></td></tr></table></figure>
+
+<h2 id="16-2-继承"><a href="#16-2-继承" class="headerlink" title="16.2 继承"></a>16.2 继承</h2><p>父工程统一管理版本：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">parent</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-parent<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.x.x<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">parent</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>自定义父工程一般设置：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">packaging</span>&gt;</span>pom<span class="tag">&lt;/<span class="name">packaging</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="16-3-dependencyManagement"><a href="#16-3-dependencyManagement" class="headerlink" title="16.3 dependencyManagement"></a>16.3 dependencyManagement</h2><p><code>dependencyManagement</code> 只管理版本，不会真正引入依赖。</p>
+<p>子模块要使用依赖，仍然需要写：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.tlias<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>tlias-pojo<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="16-4-聚合"><a href="#16-4-聚合" class="headerlink" title="16.4 聚合"></a>16.4 聚合</h2><p>父工程通过 <code>modules</code> 聚合子模块：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">modules</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">module</span>&gt;</span>tlias-pojo<span class="tag">&lt;/<span class="name">module</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">module</span>&gt;</span>tlias-utils<span class="tag">&lt;/<span class="name">module</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">module</span>&gt;</span>tlias-web<span class="tag">&lt;/<span class="name">module</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">modules</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>执行父工程打包时，会按模块依赖顺序构建。</p>
+<h2 id="16-5-私服"><a href="#16-5-私服" class="headerlink" title="16.5 私服"></a>16.5 私服</h2><p>私服用于公司内部依赖管理：</p>
+<ul>
+<li>提升下载速度。</li>
+<li>管理内部 jar。</li>
+<li>控制依赖版本。</li>
+<li>支持发布 SNAPSHOT&#x2F;RELEASE。</li>
+</ul>
+<hr>
+<h1 id="第十七模块：部署、Linux-与-Docker"><a href="#第十七模块：部署、Linux-与-Docker" class="headerlink" title="第十七模块：部署、Linux 与 Docker"></a>第十七模块：部署、Linux 与 Docker</h1><h2 id="17-1-后端部署基本流程"><a href="#17-1-后端部署基本流程" class="headerlink" title="17.1 后端部署基本流程"></a>17.1 后端部署基本流程</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">本地开发完成</span><br><span class="line">  ↓</span><br><span class="line">Maven package 打包 jar</span><br><span class="line">  ↓</span><br><span class="line">上传服务器</span><br><span class="line">  ↓</span><br><span class="line">安装 JDK、MySQL 等环境</span><br><span class="line">  ↓</span><br><span class="line">启动 jar</span><br><span class="line">  ↓</span><br><span class="line">开放端口并测试接口</span><br></pre></td></tr></table></figure>
+
+<p>启动命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar tlias.jar</span><br></pre></td></tr></table></figure>
+
+<p>后台启动：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">nohup</span> java -jar tlias.jar &gt; app.log 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
+
+<h2 id="17-2-Linux-常用命令"><a href="#17-2-Linux-常用命令" class="headerlink" title="17.2 Linux 常用命令"></a>17.2 Linux 常用命令</h2><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>ls</code></td>
+<td>查看目录</td>
+</tr>
+<tr>
+<td><code>cd</code></td>
+<td>切换目录</td>
+</tr>
+<tr>
+<td><code>pwd</code></td>
+<td>当前目录</td>
+</tr>
+<tr>
+<td><code>mkdir</code></td>
+<td>创建目录</td>
+</tr>
+<tr>
+<td><code>rm</code></td>
+<td>删除</td>
+</tr>
+<tr>
+<td><code>cp</code></td>
+<td>复制</td>
+</tr>
+<tr>
+<td><code>mv</code></td>
+<td>移动&#x2F;重命名</td>
+</tr>
+<tr>
+<td><code>tail -f</code></td>
+<td>实时查看日志</td>
+</tr>
+<tr>
+<td><code>ps -ef</code></td>
+<td>查看进程</td>
+</tr>
+<tr>
+<td><code>kill</code></td>
+<td>结束进程</td>
+</tr>
+</tbody></table>
+<h2 id="17-3-Docker-基础"><a href="#17-3-Docker-基础" class="headerlink" title="17.3 Docker 基础"></a>17.3 Docker 基础</h2><p>Docker 把应用和运行环境打包成镜像，通过容器运行。</p>
+<p>核心概念：</p>
+<table>
+<thead>
+<tr>
+<th>概念</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>镜像 Image</td>
+<td>程序运行模板</td>
+</tr>
+<tr>
+<td>容器 Container</td>
+<td>镜像运行实例</td>
+</tr>
+<tr>
+<td>Dockerfile</td>
+<td>构建镜像的脚本</td>
+</tr>
+<tr>
+<td>Docker Compose</td>
+<td>多容器编排工具</td>
+</tr>
+</tbody></table>
+<h2 id="17-4-Dockerfile-示例"><a href="#17-4-Dockerfile-示例" class="headerlink" title="17.4 Dockerfile 示例"></a>17.4 Dockerfile 示例</h2><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> eclipse-temurin:<span class="number">17</span>-jre</span><br><span class="line"><span class="keyword">WORKDIR</span><span class="language-bash"> /app</span></span><br><span class="line"><span class="keyword">COPY</span><span class="language-bash"> tlias.jar app.jar</span></span><br><span class="line"><span class="keyword">EXPOSE</span> <span class="number">8080</span></span><br><span class="line"><span class="keyword">ENTRYPOINT</span><span class="language-bash"> [<span class="string">&quot;java&quot;</span>, <span class="string">&quot;-jar&quot;</span>, <span class="string">&quot;app.jar&quot;</span>]</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="17-5-Docker-Compose-部署"><a href="#17-5-Docker-Compose-部署" class="headerlink" title="17.5 Docker Compose 部署"></a>17.5 Docker Compose 部署</h2><p>一个 Java Web 项目常见容器：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nginx 前端静态资源代理</span><br><span class="line">springboot 后端服务</span><br><span class="line">mysql 数据库</span><br></pre></td></tr></table></figure>
+
+<p><code>docker-compose.yml</code> 负责统一启动这些服务。</p>
+<p>常用命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">docker compose up -d --build</span><br><span class="line">docker compose ps</span><br><span class="line">docker compose logs -f</span><br><span class="line">docker compose down</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="第十八模块：MySQL-远程连接排查"><a href="#第十八模块：MySQL-远程连接排查" class="headerlink" title="第十八模块：MySQL 远程连接排查"></a>第十八模块：MySQL 远程连接排查</h1><p>MySQL 远程连接不上时按顺序排查：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">MySQL 服务是否启动</span><br><span class="line">  ↓</span><br><span class="line">服务器 IP 是否正确</span><br><span class="line">  ↓</span><br><span class="line">MySQL 是否监听 0.0.0.0</span><br><span class="line">  ↓</span><br><span class="line">用户是否允许远程登录</span><br><span class="line">  ↓</span><br><span class="line">防火墙/安全组是否开放 3306</span><br><span class="line">  ↓</span><br><span class="line">客户端连接参数是否正确</span><br></pre></td></tr></table></figure>
+
+<p>常见命令：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">user</span>, host <span class="keyword">FROM</span> mysql.user;</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">USER</span> <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;%&#x27;</span> IDENTIFIED <span class="keyword">BY</span> <span class="string">&#x27;password&#x27;</span>;</span><br><span class="line"><span class="keyword">GRANT</span> <span class="keyword">ALL</span> PRIVILEGES <span class="keyword">ON</span> <span class="operator">*</span>.<span class="operator">*</span> <span class="keyword">TO</span> <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;%&#x27;</span>;</span><br><span class="line">FLUSH PRIVILEGES;</span><br></pre></td></tr></table></figure>
+
+<p>配置监听地址：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bind-address = 0.0.0.0</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="第十九模块：后端高频易错点"><a href="#第十九模块：后端高频易错点" class="headerlink" title="第十九模块：后端高频易错点"></a>第十九模块：后端高频易错点</h1><h2 id="19-1-Maven-易错点"><a href="#19-1-Maven-易错点" class="headerlink" title="19.1 Maven 易错点"></a>19.1 Maven 易错点</h2><table>
+<thead>
+<tr>
+<th>问题</th>
+<th>解决</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>依赖下载失败</td>
+<td>检查网络、镜像、坐标，删除 <code>.lastUpdated</code></td>
+</tr>
+<tr>
+<td>子模块找不到父工程</td>
+<td>检查 <code>relativePath</code></td>
+</tr>
+<tr>
+<td>父工程打包失败</td>
+<td>检查 <code>packaging</code> 是否为 <code>pom</code></td>
+</tr>
+<tr>
+<td><code>dependencyManagement</code> 依赖不可用</td>
+<td>子模块还需要真正声明依赖</td>
+</tr>
+</tbody></table>
+<h2 id="19-2-SpringBoot-易错点"><a href="#19-2-SpringBoot-易错点" class="headerlink" title="19.2 SpringBoot 易错点"></a>19.2 SpringBoot 易错点</h2><table>
+<thead>
+<tr>
+<th>问题</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Bean 扫描不到</td>
+<td>不在启动类包或子包下</td>
+</tr>
+<tr>
+<td>接口 404</td>
+<td>请求路径或方法不匹配</td>
+</tr>
+<tr>
+<td>JSON 接收失败</td>
+<td>缺少 <code>@RequestBody</code> 或字段名不匹配</td>
+</tr>
+<tr>
+<td>参数为 null</td>
+<td>注解用错或前端参数名不一致</td>
+</tr>
+</tbody></table>
+<h2 id="19-3-MyBatis-易错点"><a href="#19-3-MyBatis-易错点" class="headerlink" title="19.3 MyBatis 易错点"></a>19.3 MyBatis 易错点</h2><table>
+<thead>
+<tr>
+<th>问题</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SQL 找不到</td>
+<td>XML <code>namespace</code> 或 <code>id</code> 不匹配</td>
+</tr>
+<tr>
+<td>字段封装失败</td>
+<td>下划线和驼峰未映射</td>
+</tr>
+<tr>
+<td>SQL 注入风险</td>
+<td>错用 <code>${}</code></td>
+</tr>
+<tr>
+<td>动态 SQL 多出 <code>and</code></td>
+<td>没用 <code>where</code> 标签</td>
+</tr>
+<tr>
+<td>批量删除失败</td>
+<td><code>foreach</code> 参数名不对</td>
+</tr>
+</tbody></table>
+<h2 id="19-4-事务易错点"><a href="#19-4-事务易错点" class="headerlink" title="19.4 事务易错点"></a>19.4 事务易错点</h2><table>
+<thead>
+<tr>
+<th>问题</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>事务不回滚</td>
+<td>异常被捕获或不是运行时异常</td>
+</tr>
+<tr>
+<td>注解不生效</td>
+<td>方法不是通过代理对象调用</td>
+</tr>
+<tr>
+<td>加在 Controller 层</td>
+<td>职责不清，推荐加 Service 层</td>
+</tr>
+</tbody></table>
+<h2 id="19-5-登录认证易错点"><a href="#19-5-登录认证易错点" class="headerlink" title="19.5 登录认证易错点"></a>19.5 登录认证易错点</h2><table>
+<thead>
+<tr>
+<th>问题</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>401</td>
+<td>token 没传、过期或签名错误</td>
+</tr>
+<tr>
+<td>登录接口被拦截</td>
+<td>拦截器没有放行登录路径</td>
+</tr>
+<tr>
+<td>前端跨域拿不到 token</td>
+<td>请求头配置或跨域配置问题</td>
+</tr>
+<tr>
+<td>token 存敏感信息</td>
+<td>JWT payload 可被解码查看</td>
+</tr>
+</tbody></table>
+<hr>
+<h1 id="第二十模块：后端知识关系图"><a href="#第二十模块：后端知识关系图" class="headerlink" title="第二十模块：后端知识关系图"></a>第二十模块：后端知识关系图</h1><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">Maven</span><br><span class="line">  ↓ 管理依赖和构建</span><br><span class="line">SpringBoot</span><br><span class="line">  ↓ 快速创建 Web 应用</span><br><span class="line">Controller</span><br><span class="line">  ↓ 接收 HTTP 请求</span><br><span class="line">Service</span><br><span class="line">  ↓ 处理业务逻辑</span><br><span class="line">Mapper/MyBatis</span><br><span class="line">  ↓ 执行 SQL</span><br><span class="line">MySQL</span><br><span class="line">  ↓ 保存业务数据</span><br><span class="line">事务</span><br><span class="line">  ↓ 保证多表操作一致性</span><br><span class="line">异常处理 + 日志</span><br><span class="line">  ↓ 提升稳定性和可排查性</span><br><span class="line">JWT + 拦截器</span><br><span class="line">  ↓ 保护接口安全</span><br><span class="line">AOP</span><br><span class="line">  ↓ 抽取通用横切逻辑</span><br><span class="line">多模块 Maven</span><br><span class="line">  ↓ 提升项目结构清晰度</span><br><span class="line">Docker/Linux</span><br><span class="line">  ↓ 完成上线部署</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="第二十一模块：看完应掌握的能力清单"><a href="#第二十一模块：看完应掌握的能力清单" class="headerlink" title="第二十一模块：看完应掌握的能力清单"></a>第二十一模块：看完应掌握的能力清单</h1><p>学完后端部分，应该能做到：</p>
+<ul>
+<li>能看懂 Maven <code>pom.xml</code>，知道依赖、坐标、生命周期。</li>
+<li>能创建并运行 SpringBoot Web 项目。</li>
+<li>能设计 REST 风格接口。</li>
+<li>能按 Controller、Service、Mapper 三层编写代码。</li>
+<li>能编写 MySQL 基础 SQL、多表查询、分页查询。</li>
+<li>能使用 MyBatis 注解和 XML 操作数据库。</li>
+<li>能完成部门、员工、班级、学员 CRUD。</li>
+<li>能使用事务保证多表操作一致性。</li>
+<li>能完成文件上传到本地或 OSS。</li>
+<li>能使用全局异常处理统一返回错误。</li>
+<li>能使用日志定位问题。</li>
+<li>能实现 JWT 登录认证。</li>
+<li>能理解 Filter 和 Interceptor 的区别。</li>
+<li>能使用 AOP 实现操作日志。</li>
+<li>能理解 SpringBoot 起步依赖和自动配置原理。</li>
+<li>能拆分 Maven 多模块项目。</li>
+<li>能使用 Linux、Docker、Docker Compose 部署 Java 项目。</li>
+</ul>
+<hr>
+<h1 id="第二十二模块：后端复习建议"><a href="#第二十二模块：后端复习建议" class="headerlink" title="第二十二模块：后端复习建议"></a>第二十二模块：后端复习建议</h1><p>建议按下面顺序复习：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">1. Maven 坐标、依赖、生命周期</span><br><span class="line">2. SpringBoot 启动类、Controller、HTTP、REST</span><br><span class="line">3. 三层架构、IOC、DI</span><br><span class="line">4. MySQL DDL/DML/DQL、多表查询、事务、索引</span><br><span class="line">5. MyBatis 注解、XML、动态 SQL</span><br><span class="line">6. 部门 CRUD，掌握基础开发闭环</span><br><span class="line">7. 员工分页、多表、条件查询，掌握复杂查询</span><br><span class="line">8. 新增员工 + 经历，掌握事务</span><br><span class="line">9. 文件上传、异常处理、日志</span><br><span class="line">10. 登录认证 JWT、Filter、Interceptor</span><br><span class="line">11. AOP 操作日志</span><br><span class="line">12. SpringBoot 自动配置原理</span><br><span class="line">13. Maven 多模块与 Docker 部署</span><br></pre></td></tr></table></figure>
+
+<p>记忆口诀：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Maven 管依赖，Boot 起项目；</span><br><span class="line">Controller 收请求，Service 写业务；</span><br><span class="line">Mapper 查数据库，Result 统一回；</span><br><span class="line">事务保一致，异常统一接；</span><br><span class="line">JWT 管登录，AOP 记日志；</span><br><span class="line">Docker 做部署，日志查问题。</span><br></pre></td></tr></table></figure>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://SeeYouLikeLast.github.io">Yixun_Liu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://seeyoulikelast.github.io/2026/05/31/%E5%90%8E%E7%AB%AF%E6%A8%A1%E5%9D%97%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">https://seeyoulikelast.github.io/2026/05/31/%E5%90%8E%E7%AB%AF%E6%A8%A1%E5%9D%97%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://SeeYouLikeLast.github.io" target="_blank">SeeYouLikeLast</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/java/">java</a></div><div class="post-share"><div class="social-share" data-image="/img/avatar.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/05/31/%E5%89%8D%E7%AB%AF%E6%A8%A1%E5%9D%97%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" title="Tlias前端模块化学习笔记"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Tlias前端模块化学习笔记</div></div><div class="info-2"><div class="info-item-1">0. 前端学习总路线前端开发的本质是： 1结构 HTML → 样式 CSS → 行为 JavaScript → 数据驱动 Vue → 组件库 ElementPlus → 网络请求 Ajax/Axios → 工程化 Vite → 项目实战  可以用一句话理解：  HTML 决定页面有什么。 CSS 决定页面长什么样。 JavaScript 决定页面能做什么。 Vue 让页面根据数据自动变化。 Ajax&#x2F;Axios 让前端和后端通信。 ElementPlus 提供现成的后台管理组件。 Vite + Vue 工程化 让前端项目更适合真实开发。   第一模块：Web 标准与浏览器运行机制1.1 Web 标准三件套Web 标准由三类技术共同完成：    技术 职责 类比    HTML 页面结构和内容 房子的骨架   CSS 页面样式和布局 房子的装修   JavaScript 页面行为和交互 房子的电器和开关   一个网页从无到有的过程通常是： 123456789浏览器加载 HTML      ↓解析标签，形成 DOM 树      ↓加载 CSS，计算样式      ↓执行 ...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2026/05/31/%E5%89%8D%E7%AB%AF%E6%A8%A1%E5%9D%97%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" title="Tlias前端模块化学习笔记"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-05-31</div><div class="info-item-2">Tlias前端模块化学习笔记</div></div><div class="info-2"><div class="info-item-1">0. 前端学习总路线前端开发的本质是： 1结构 HTML → 样式 CSS → 行为 JavaScript → 数据驱动 Vue → 组件库 ElementPlus → 网络请求 Ajax/Axios → 工程化 Vite → 项目实战  可以用一句话理解：  HTML 决定页面有什么。 CSS 决定页面长什么样。 JavaScript 决定页面能做什么。 Vue 让页面根据数据自动变化。 Ajax&#x2F;Axios 让前端和后端通信。 ElementPlus 提供现成的后台管理组件。 Vite + Vue 工程化 让前端项目更适合真实开发。   第一模块：Web 标准与浏览器运行机制1.1 Web 标准三件套Web 标准由三类技术共同完成：    技术 职责 类比    HTML 页面结构和内容 房子的骨架   CSS 页面样式和布局 房子的装修   JavaScript 页面行为和交互 房子的电器和开关   一个网页从无到有的过程通常是： 123456789浏览器加载 HTML      ↓解析标签，形成 DOM 树      ↓加载 CSS，计算样式      ↓执行 ...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Yixun_Liu</div><div class="author-info-description">码行千里，积于跬步。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">10</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">6</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/seeyoulikelast"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/SeeYouLikeLast" target="_blank" title="GitHub"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xidian_yixunliu@163.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0-%E5%90%8E%E7%AB%AF%E5%AD%A6%E4%B9%A0%E6%80%BB%E8%B7%AF%E7%BA%BF"><span class="toc-number">1.</span> <span class="toc-text">0. 后端学习总路线</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E6%A8%A1%E5%9D%97%EF%BC%9AMaven-%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86"><span class="toc-number">2.</span> <span class="toc-text">第一模块：Maven 项目管理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-Maven-%E7%9A%84%E4%B8%89%E5%A4%A7%E4%BD%9C%E7%94%A8"><span class="toc-number">2.1.</span> <span class="toc-text">1.1 Maven 的三大作用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-Maven-%E5%9D%90%E6%A0%87"><span class="toc-number">2.2.</span> <span class="toc-text">1.2 Maven 坐标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-3-%E4%BB%93%E5%BA%93%E4%BD%93%E7%B3%BB"><span class="toc-number">2.3.</span> <span class="toc-text">1.3 仓库体系</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-4-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="toc-number">2.4.</span> <span class="toc-text">1.4 生命周期</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-5-%E4%BE%9D%E8%B5%96%E8%8C%83%E5%9B%B4-scope"><span class="toc-number">2.5.</span> <span class="toc-text">1.5 依赖范围 scope</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E6%A8%A1%E5%9D%97%EF%BC%9ASpringBoot-Web-%E5%9F%BA%E7%A1%80"><span class="toc-number">3.</span> <span class="toc-text">第二模块：SpringBoot Web 基础</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-SpringBoot-%E8%A7%A3%E5%86%B3%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98"><span class="toc-number">3.1.</span> <span class="toc-text">2.1 SpringBoot 解决什么问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-Controller-%E5%85%A5%E9%97%A8"><span class="toc-number">3.2.</span> <span class="toc-text">2.2 Controller 入门</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-HTTP-%E5%8D%8F%E8%AE%AE"><span class="toc-number">3.3.</span> <span class="toc-text">2.3 HTTP 协议</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4-REST-%E9%A3%8E%E6%A0%BC%E6%8E%A5%E5%8F%A3"><span class="toc-number">3.4.</span> <span class="toc-text">2.4 REST 风格接口</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E6%A8%A1%E5%9D%97%EF%BC%9A%E4%B8%89%E5%B1%82%E6%9E%B6%E6%9E%84%E4%B8%8E-IOC-DI"><span class="toc-number">4.</span> <span class="toc-text">第三模块：三层架构与 IOC&#x2F;DI</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-%E4%B8%89%E5%B1%82%E6%9E%B6%E6%9E%84"><span class="toc-number">4.1.</span> <span class="toc-text">3.1 三层架构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-%E5%88%86%E5%B1%82%E7%9A%84%E5%A5%BD%E5%A4%84"><span class="toc-number">4.2.</span> <span class="toc-text">3.2 分层的好处</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3-IOC-%E6%8E%A7%E5%88%B6%E5%8F%8D%E8%BD%AC"><span class="toc-number">4.3.</span> <span class="toc-text">3.3 IOC 控制反转</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-4-DI-%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5"><span class="toc-number">4.4.</span> <span class="toc-text">3.4 DI 依赖注入</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E6%A8%A1%E5%9D%97%EF%BC%9AMySQL-%E4%B8%8E-SQL"><span class="toc-number">5.</span> <span class="toc-text">第四模块：MySQL 与 SQL</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1-SQL-%E5%88%86%E7%B1%BB"><span class="toc-number">5.1.</span> <span class="toc-text">4.1 SQL 分类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-DDL%EF%BC%9A%E8%A1%A8%E7%BB%93%E6%9E%84%E6%93%8D%E4%BD%9C"><span class="toc-number">5.2.</span> <span class="toc-text">4.2 DDL：表结构操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-3-DML%EF%BC%9A%E5%A2%9E%E5%88%A0%E6%94%B9"><span class="toc-number">5.3.</span> <span class="toc-text">4.3 DML：增删改</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-4-DQL%EF%BC%9A%E6%9F%A5%E8%AF%A2"><span class="toc-number">5.4.</span> <span class="toc-text">4.4 DQL：查询</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-5-%E5%A4%9A%E8%A1%A8%E5%85%B3%E7%B3%BB"><span class="toc-number">5.5.</span> <span class="toc-text">4.5 多表关系</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-6-%E5%A4%9A%E8%A1%A8%E6%9F%A5%E8%AF%A2"><span class="toc-number">5.6.</span> <span class="toc-text">4.6 多表查询</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E8%BF%9E%E6%8E%A5"><span class="toc-number">5.6.1.</span> <span class="toc-text">内连接</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A6%E5%A4%96%E8%BF%9E%E6%8E%A5"><span class="toc-number">5.6.2.</span> <span class="toc-text">左外连接</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-7-%E4%BA%8B%E5%8A%A1%E4%B8%8E-ACID"><span class="toc-number">5.7.</span> <span class="toc-text">4.7 事务与 ACID</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-8-%E7%B4%A2%E5%BC%95"><span class="toc-number">5.8.</span> <span class="toc-text">4.8 索引</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%BA%94%E6%A8%A1%E5%9D%97%EF%BC%9AJDBC%E3%80%81%E8%BF%9E%E6%8E%A5%E6%B1%A0%E4%B8%8E-MyBatis"><span class="toc-number">6.</span> <span class="toc-text">第五模块：JDBC、连接池与 MyBatis</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#5-1-JDBC-%E5%9F%BA%E6%9C%AC%E6%B5%81%E7%A8%8B"><span class="toc-number">6.1.</span> <span class="toc-text">5.1 JDBC 基本流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-2-PreparedStatement"><span class="toc-number">6.2.</span> <span class="toc-text">5.2 PreparedStatement</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-3-%E8%BF%9E%E6%8E%A5%E6%B1%A0"><span class="toc-number">6.3.</span> <span class="toc-text">5.3 连接池</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-4-MyBatis-%E5%85%A5%E9%97%A8"><span class="toc-number">6.4.</span> <span class="toc-text">5.4 MyBatis 入门</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-5-%E5%92%8C-%E5%8C%BA%E5%88%AB"><span class="toc-number">6.5.</span> <span class="toc-text">5.5 #{} 和 ${} 区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-6-XML-%E6%98%A0%E5%B0%84"><span class="toc-number">6.6.</span> <span class="toc-text">5.6 XML 映射</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-7-%E5%8A%A8%E6%80%81-SQL"><span class="toc-number">6.7.</span> <span class="toc-text">5.7 动态 SQL</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%85%AD%E6%A8%A1%E5%9D%97%EF%BC%9A%E7%BB%9F%E4%B8%80%E7%BB%93%E6%9E%9C%E4%B8%8E-RESTful-CRUD"><span class="toc-number">7.</span> <span class="toc-text">第六模块：统一结果与 RESTful CRUD</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#6-1-%E7%BB%9F%E4%B8%80%E5%93%8D%E5%BA%94%E7%BB%93%E6%9E%9C"><span class="toc-number">7.1.</span> <span class="toc-text">6.1 统一响应结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-2-%E9%83%A8%E9%97%A8%E7%AE%A1%E7%90%86-CRUD"><span class="toc-number">7.2.</span> <span class="toc-text">6.2 部门管理 CRUD</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-3-%E5%8F%82%E6%95%B0%E6%8E%A5%E6%94%B6"><span class="toc-number">7.3.</span> <span class="toc-text">6.3 参数接收</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-4-%E6%97%B6%E9%97%B4%E5%AD%97%E6%AE%B5%E5%A4%84%E7%90%86"><span class="toc-number">7.4.</span> <span class="toc-text">6.4 时间字段处理</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%B8%83%E6%A8%A1%E5%9D%97%EF%BC%9A%E5%88%86%E9%A1%B5%E3%80%81%E6%9D%A1%E4%BB%B6%E6%9F%A5%E8%AF%A2%E4%B8%8E%E5%A4%9A%E8%A1%A8%E4%B8%9A%E5%8A%A1"><span class="toc-number">8.</span> <span class="toc-text">第七模块：分页、条件查询与多表业务</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#7-1-%E5%88%86%E9%A1%B5%E6%9F%A5%E8%AF%A2"><span class="toc-number">8.1.</span> <span class="toc-text">7.1 分页查询</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-2-PageHelper-%E5%88%86%E9%A1%B5"><span class="toc-number">8.2.</span> <span class="toc-text">7.2 PageHelper 分页</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-3-%E6%9D%A1%E4%BB%B6%E5%88%86%E9%A1%B5%E6%9F%A5%E8%AF%A2"><span class="toc-number">8.3.</span> <span class="toc-text">7.3 条件分页查询</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-4-%E5%A4%9A%E8%A1%A8%E7%BB%93%E6%9E%9C%E5%B0%81%E8%A3%85"><span class="toc-number">8.4.</span> <span class="toc-text">7.4 多表结果封装</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%85%AB%E6%A8%A1%E5%9D%97%EF%BC%9A%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98%E4%B8%9A%E5%8A%A1%E6%A8%A1%E5%9D%97"><span class="toc-number">9.</span> <span class="toc-text">第八模块：项目实战业务模块</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#8-1-%E9%83%A8%E9%97%A8%E7%AE%A1%E7%90%86"><span class="toc-number">9.1.</span> <span class="toc-text">8.1 部门管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-2-%E5%91%98%E5%B7%A5%E7%AE%A1%E7%90%86"><span class="toc-number">9.2.</span> <span class="toc-text">8.2 员工管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-3-%E7%8F%AD%E7%BA%A7%E7%AE%A1%E7%90%86"><span class="toc-number">9.3.</span> <span class="toc-text">8.3 班级管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-4-%E5%AD%A6%E5%91%98%E7%AE%A1%E7%90%86"><span class="toc-number">9.4.</span> <span class="toc-text">8.4 学员管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-5-%E7%BB%9F%E8%AE%A1%E6%8A%A5%E8%A1%A8"><span class="toc-number">9.5.</span> <span class="toc-text">8.5 统计报表</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%B9%9D%E6%A8%A1%E5%9D%97%EF%BC%9A%E4%BA%8B%E5%8A%A1%E7%AE%A1%E7%90%86"><span class="toc-number">10.</span> <span class="toc-text">第九模块：事务管理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#9-1-%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E4%BA%8B%E5%8A%A1"><span class="toc-number">10.1.</span> <span class="toc-text">9.1 为什么需要事务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-2-Spring-%E4%BA%8B%E5%8A%A1"><span class="toc-number">10.2.</span> <span class="toc-text">9.2 Spring 事务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-3-%E4%BA%8B%E5%8A%A1%E5%A4%B1%E6%95%88%E5%B8%B8%E8%A7%81%E5%8E%9F%E5%9B%A0"><span class="toc-number">10.3.</span> <span class="toc-text">9.3 事务失效常见原因</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%8D%81%E6%A8%A1%E5%9D%97%EF%BC%9A%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0"><span class="toc-number">11.</span> <span class="toc-text">第十模块：文件上传</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#10-1-%E4%B8%8A%E4%BC%A0%E6%B5%81%E7%A8%8B"><span class="toc-number">11.1.</span> <span class="toc-text">10.1 上传流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-2-%E6%96%87%E4%BB%B6%E5%90%8D%E5%A4%84%E7%90%86"><span class="toc-number">11.2.</span> <span class="toc-text">10.2 文件名处理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-3-%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8-vs-%E5%AF%B9%E8%B1%A1%E5%AD%98%E5%82%A8"><span class="toc-number">11.3.</span> <span class="toc-text">10.3 本地存储 vs 对象存储</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%8D%81%E4%B8%80%E6%A8%A1%E5%9D%97%EF%BC%9A%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E4%B8%8E%E5%8F%82%E6%95%B0%E6%A0%A1%E9%AA%8C"><span class="toc-number">12.</span> <span class="toc-text">第十一模块：异常处理与参数校验</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#11-1-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E7%BB%9F%E4%B8%80%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86"><span class="toc-number">12.1.</span> <span class="toc-text">11.1 为什么要统一异常处理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#11-2-%E5%85%A8%E5%B1%80%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86"><span class="toc-number">12.2.</span> <span class="toc-text">11.2 全局异常处理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#11-3-%E5%8F%82%E6%95%B0%E6%A0%A1%E9%AA%8C%E6%80%9D%E8%B7%AF"><span class="toc-number">12.3.</span> <span class="toc-text">11.3 参数校验思路</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%8D%81%E4%BA%8C%E6%A8%A1%E5%9D%97%EF%BC%9A%E6%97%A5%E5%BF%97%E7%B3%BB%E7%BB%9F-Logback"><span class="toc-number">13.</span> <span class="toc-text">第十二模块：日志系统 Logback</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#12-1-%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E6%97%A5%E5%BF%97"><span class="toc-number">13.1.</span> <span class="toc-text">12.1 为什么需要日志</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#12-2-%E6%97%A5%E5%BF%97%E7%BA%A7%E5%88%AB"><span class="toc-number">13.2.</span> <span class="toc-text">12.2 日志级别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#12-3-%E6%97%A5%E5%BF%97%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F"><span class="toc-number">13.3.</span> <span class="toc-text">12.3 日志使用方式</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%8D%81%E4%B8%89%E6%A8%A1%E5%9D%97%EF%BC%9A%E7%99%BB%E5%BD%95%E8%AE%A4%E8%AF%81%E3%80%81JWT%E3%80%81Filter%E3%80%81Interceptor"><span class="toc-number">14.</span> <span class="toc-text">第十三模块：登录认证、JWT、Filter、Interceptor</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#13-1-%E7%99%BB%E5%BD%95%E8%AE%A4%E8%AF%81%E6%B5%81%E7%A8%8B"><span class="toc-number">14.1.</span> <span class="toc-text">13.1 登录认证流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#13-2-JWT-%E7%BB%93%E6%9E%84"><span class="toc-number">14.2.</span> <span class="toc-text">13.2 JWT 结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#13-3-Filter-%E8%BF%87%E6%BB%A4%E5%99%A8"><span class="toc-number">14.3.</span> <span class="toc-text">13.3 Filter 过滤器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#13-4-Interceptor-%E6%8B%A6%E6%88%AA%E5%99%A8"><span class="toc-number">14.4.</span> <span class="toc-text">13.4 Interceptor 拦截器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#13-5-Filter-%E5%92%8C-Interceptor-%E5%8C%BA%E5%88%AB"><span class="toc-number">14.5.</span> <span class="toc-text">13.5 Filter 和 Interceptor 区别</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%8D%81%E5%9B%9B%E6%A8%A1%E5%9D%97%EF%BC%9AAOP-%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B"><span class="toc-number">15.</span> <span class="toc-text">第十四模块：AOP 面向切面编程</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#14-1-AOP-%E8%A7%A3%E5%86%B3%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98"><span class="toc-number">15.1.</span> <span class="toc-text">14.1 AOP 解决什么问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#14-2-AOP-%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5"><span class="toc-number">15.2.</span> <span class="toc-text">14.2 AOP 核心概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#14-3-%E9%80%9A%E7%9F%A5%E7%B1%BB%E5%9E%8B"><span class="toc-number">15.3.</span> <span class="toc-text">14.3 通知类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#14-4-%E6%93%8D%E4%BD%9C%E6%97%A5%E5%BF%97%E6%A1%88%E4%BE%8B"><span class="toc-number">15.4.</span> <span class="toc-text">14.4 操作日志案例</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%8D%81%E4%BA%94%E6%A8%A1%E5%9D%97%EF%BC%9ASpringBoot-%E9%85%8D%E7%BD%AE%E4%B8%8E%E5%8E%9F%E7%90%86"><span class="toc-number">16.</span> <span class="toc-text">第十五模块：SpringBoot 配置与原理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#15-1-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-number">16.1.</span> <span class="toc-text">15.1 配置文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#15-2-%E9%85%8D%E7%BD%AE%E4%BC%98%E5%85%88%E7%BA%A7"><span class="toc-number">16.2.</span> <span class="toc-text">15.2 配置优先级</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#15-3-Bean-%E4%BD%9C%E7%94%A8%E5%9F%9F"><span class="toc-number">16.3.</span> <span class="toc-text">15.3 Bean 作用域</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#15-4-%E7%AC%AC%E4%B8%89%E6%96%B9-Bean"><span class="toc-number">16.4.</span> <span class="toc-text">15.4 第三方 Bean</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#15-5-SpringBootApplication"><span class="toc-number">16.5.</span> <span class="toc-text">15.5 @SpringBootApplication</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#15-6-%E8%B5%B7%E6%AD%A5%E4%BE%9D%E8%B5%96%E5%8E%9F%E7%90%86"><span class="toc-number">16.6.</span> <span class="toc-text">15.6 起步依赖原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#15-7-%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E5%8E%9F%E7%90%86"><span class="toc-number">16.7.</span> <span class="toc-text">15.7 自动配置原理</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%8D%81%E5%85%AD%E6%A8%A1%E5%9D%97%EF%BC%9AMaven-%E9%AB%98%E7%BA%A7%E4%B8%8E%E5%A4%9A%E6%A8%A1%E5%9D%97%E9%A1%B9%E7%9B%AE"><span class="toc-number">17.</span> <span class="toc-text">第十六模块：Maven 高级与多模块项目</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#16-1-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%88%86%E6%A8%A1%E5%9D%97"><span class="toc-number">17.1.</span> <span class="toc-text">16.1 为什么分模块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#16-2-%E7%BB%A7%E6%89%BF"><span class="toc-number">17.2.</span> <span class="toc-text">16.2 继承</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#16-3-dependencyManagement"><span class="toc-number">17.3.</span> <span class="toc-text">16.3 dependencyManagement</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#16-4-%E8%81%9A%E5%90%88"><span class="toc-number">17.4.</span> <span class="toc-text">16.4 聚合</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#16-5-%E7%A7%81%E6%9C%8D"><span class="toc-number">17.5.</span> <span class="toc-text">16.5 私服</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%8D%81%E4%B8%83%E6%A8%A1%E5%9D%97%EF%BC%9A%E9%83%A8%E7%BD%B2%E3%80%81Linux-%E4%B8%8E-Docker"><span class="toc-number">18.</span> <span class="toc-text">第十七模块：部署、Linux 与 Docker</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#17-1-%E5%90%8E%E7%AB%AF%E9%83%A8%E7%BD%B2%E5%9F%BA%E6%9C%AC%E6%B5%81%E7%A8%8B"><span class="toc-number">18.1.</span> <span class="toc-text">17.1 后端部署基本流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#17-2-Linux-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-number">18.2.</span> <span class="toc-text">17.2 Linux 常用命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#17-3-Docker-%E5%9F%BA%E7%A1%80"><span class="toc-number">18.3.</span> <span class="toc-text">17.3 Docker 基础</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#17-4-Dockerfile-%E7%A4%BA%E4%BE%8B"><span class="toc-number">18.4.</span> <span class="toc-text">17.4 Dockerfile 示例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#17-5-Docker-Compose-%E9%83%A8%E7%BD%B2"><span class="toc-number">18.5.</span> <span class="toc-text">17.5 Docker Compose 部署</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%8D%81%E5%85%AB%E6%A8%A1%E5%9D%97%EF%BC%9AMySQL-%E8%BF%9C%E7%A8%8B%E8%BF%9E%E6%8E%A5%E6%8E%92%E6%9F%A5"><span class="toc-number">19.</span> <span class="toc-text">第十八模块：MySQL 远程连接排查</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%8D%81%E4%B9%9D%E6%A8%A1%E5%9D%97%EF%BC%9A%E5%90%8E%E7%AB%AF%E9%AB%98%E9%A2%91%E6%98%93%E9%94%99%E7%82%B9"><span class="toc-number">20.</span> <span class="toc-text">第十九模块：后端高频易错点</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#19-1-Maven-%E6%98%93%E9%94%99%E7%82%B9"><span class="toc-number">20.1.</span> <span class="toc-text">19.1 Maven 易错点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#19-2-SpringBoot-%E6%98%93%E9%94%99%E7%82%B9"><span class="toc-number">20.2.</span> <span class="toc-text">19.2 SpringBoot 易错点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#19-3-MyBatis-%E6%98%93%E9%94%99%E7%82%B9"><span class="toc-number">20.3.</span> <span class="toc-text">19.3 MyBatis 易错点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#19-4-%E4%BA%8B%E5%8A%A1%E6%98%93%E9%94%99%E7%82%B9"><span class="toc-number">20.4.</span> <span class="toc-text">19.4 事务易错点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#19-5-%E7%99%BB%E5%BD%95%E8%AE%A4%E8%AF%81%E6%98%93%E9%94%99%E7%82%B9"><span class="toc-number">20.5.</span> <span class="toc-text">19.5 登录认证易错点</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E5%8D%81%E6%A8%A1%E5%9D%97%EF%BC%9A%E5%90%8E%E7%AB%AF%E7%9F%A5%E8%AF%86%E5%85%B3%E7%B3%BB%E5%9B%BE"><span class="toc-number">21.</span> <span class="toc-text">第二十模块：后端知识关系图</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E5%8D%81%E4%B8%80%E6%A8%A1%E5%9D%97%EF%BC%9A%E7%9C%8B%E5%AE%8C%E5%BA%94%E6%8E%8C%E6%8F%A1%E7%9A%84%E8%83%BD%E5%8A%9B%E6%B8%85%E5%8D%95"><span class="toc-number">22.</span> <span class="toc-text">第二十一模块：看完应掌握的能力清单</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E5%8D%81%E4%BA%8C%E6%A8%A1%E5%9D%97%EF%BC%9A%E5%90%8E%E7%AB%AF%E5%A4%8D%E4%B9%A0%E5%BB%BA%E8%AE%AE"><span class="toc-number">23.</span> <span class="toc-text">第二十二模块：后端复习建议</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/05/31/%E5%89%8D%E7%AB%AF%E6%A8%A1%E5%9D%97%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" title="Tlias前端模块化学习笔记">Tlias前端模块化学习笔记</a><time datetime="2026-05-30T16:00:00.000Z" title="发表于 2026-05-31 00:00:00">2026-05-31</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/05/31/%E5%90%8E%E7%AB%AF%E6%A8%A1%E5%9D%97%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" title="Tlias后端模块化学习笔记">Tlias后端模块化学习笔记</a><time datetime="2026-05-30T16:00:00.000Z" title="发表于 2026-05-31 00:00:00">2026-05-31</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/11/%E6%9D%8E%E6%B2%902/" title="李沐2">李沐2</a><time datetime="2026-04-10T16:00:00.000Z" title="发表于 2026-04-11 00:00:00">2026-04-11</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/11/%E6%9D%8E%E6%B2%90/" title="李沐">李沐</a><time datetime="2026-04-10T16:00:00.000Z" title="发表于 2026-04-11 00:00:00">2026-04-11</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/08/Java%E4%BB%A3%E7%A0%81%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B/" title="Java代码运行过程">Java代码运行过程</a><time datetime="2026-03-07T16:00:00.000Z" title="发表于 2026-03-08 00:00:00">2026-03-08</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By Yixun_Liu</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.1</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.3</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.3"></script><script src="/js/main.js?v=5.5.3"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        loader: {
+          load: [
+            // Four font extension packages (optional)
+            //- '[tex]/bbm',
+            //- '[tex]/bboldx',
+            //- '[tex]/dsfont',
+            '[tex]/mhchem'
+          ],
+          paths: {
+            'mathjax-newcm': '[mathjax]/../@mathjax/mathjax-newcm-font',
+
+            //- // Four font extension packages (optional)
+            //- 'mathjax-bbm-extension': '[mathjax]/../@mathjax/mathjax-bbm-font-extension',
+            //- 'mathjax-bboldx-extension': '[mathjax]/../@mathjax/mathjax-bboldx-font-extension',
+            //- 'mathjax-dsfont-extension': '[mathjax]/../@mathjax/mathjax-dsfont-font-extension',
+            'mathjax-mhchem-extension': '[mathjax]/../@mathjax/mathjax-mhchem-font-extension'
+          }
+        },
+        output: {
+          font: 'mathjax-newcm',
+        },
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+          packages: {
+            '[+]': [
+              'mhchem'
+            ]
+          }
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          menuOptions: {
+            settings: {
+              enrich: false  // Turn off Braille and voice narration text automatic generation
+            }
+          },
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
