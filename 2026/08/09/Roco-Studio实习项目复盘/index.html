@@ -1,0 +1,348 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Roco Studio 实习项目复盘：从 AMR 接口适配到地图导航 | SeeYouLikeLast</title><meta name="author" content="Yixun_Liu"><meta name="copyright" content="Yixun_Liu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Roco Studio 是我在实习期间接触的工业机器人工作站管理与控制平台。它需要把机械臂、AMR、相机等不同设备接入同一套系统，并在 Web、桌面端和平板端完成设备管理、状态监控、任务编排与运行控制。 本文前半部分介绍完整平台，后半部分重点复盘我实际负责的 AMR 地图、点位、遥控与导航业务。项目中的机械臂、相机、程序编排和多端交付等模块属于平台整体能力，不代表全部由我完成。文章只讨论可以公开的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Roco Studio 实习项目复盘：从 AMR 接口适配到地图导航">
+<meta property="og:url" content="https://seeyoulikelast.github.io/2026/08/09/Roco-Studio%E5%AE%9E%E4%B9%A0%E9%A1%B9%E7%9B%AE%E5%A4%8D%E7%9B%98/index.html">
+<meta property="og:site_name" content="SeeYouLikeLast">
+<meta property="og:description" content="Roco Studio 是我在实习期间接触的工业机器人工作站管理与控制平台。它需要把机械臂、AMR、相机等不同设备接入同一套系统，并在 Web、桌面端和平板端完成设备管理、状态监控、任务编排与运行控制。 本文前半部分介绍完整平台，后半部分重点复盘我实际负责的 AMR 地图、点位、遥控与导航业务。项目中的机械臂、相机、程序编排和多端交付等模块属于平台整体能力，不代表全部由我完成。文章只讨论可以公开的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://seeyoulikelast.github.io/img/avatar.jpg">
+<meta property="article:published_time" content="2026-08-08T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-08-09T08:51:21.019Z">
+<meta property="article:author" content="Yixun_Liu">
+<meta property="article:tag" content="AMR">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="MQTT">
+<meta property="article:tag" content="ROS 2">
+<meta property="article:tag" content="Vue">
+<meta property="article:tag" content="实习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://seeyoulikelast.github.io/img/avatar.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Roco Studio 实习项目复盘：从 AMR 接口适配到地图导航",
+  "url": "https://seeyoulikelast.github.io/2026/08/09/Roco-Studio%E5%AE%9E%E4%B9%A0%E9%A1%B9%E7%9B%AE%E5%A4%8D%E7%9B%98/",
+  "image": "https://seeyoulikelast.github.io/img/avatar.jpg",
+  "datePublished": "2026-08-08T16:00:00.000Z",
+  "dateModified": "2026-08-09T08:51:21.019Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Yixun_Liu",
+      "url": "https://SeeYouLikeLast.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://seeyoulikelast.github.io/2026/08/09/Roco-Studio%E5%AE%9E%E4%B9%A0%E9%A1%B9%E7%9B%AE%E5%A4%8D%E7%9B%98/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.3"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Roco Studio 实习项目复盘：从 AMR 接口适配到地图导航',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 8.1.1"></head><body><div class="bg-animation" id="web_bg" style="background-image: url(/img/my_blog.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">12</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">27</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">SeeYouLikeLast</span></a><a class="nav-page-title" href="/"><span class="site-name">Roco Studio 实习项目复盘：从 AMR 接口适配到地图导航</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Roco Studio 实习项目复盘：从 AMR 接口适配到地图导航</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-08-08T16:00:00.000Z" title="发表于 2026-08-09 00:00:00">2026-08-09</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-08-09T08:51:21.019Z" title="更新于 2026-08-09 16:51:21">2026-08-09</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E9%A1%B9%E7%9B%AE%E5%AE%9E%E8%B7%B5/">项目实践</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>Roco Studio 是我在实习期间接触的工业机器人工作站管理与控制平台。它需要把机械臂、AMR、相机等不同设备接入同一套系统，并在 Web、桌面端和平板端完成设备管理、状态监控、任务编排与运行控制。</p>
+<p>本文前半部分介绍完整平台，后半部分重点复盘我实际负责的 AMR 地图、点位、遥控与导航业务。项目中的机械臂、相机、程序编排和多端交付等模块属于平台整体能力，不代表全部由我完成。文章只讨论可以公开的技术架构和工程经验，不涉及客户信息、生产环境地址、账号凭据与私有协议细节。</p>
+<h2 id="项目要解决的问题"><a href="#项目要解决的问题" class="headerlink" title="项目要解决的问题"></a>项目要解决的问题</h2><p>传统工业设备通常拥有不同的 SDK、通信协议和状态模型。如果界面直接绑定某一种设备，后续增加设备类型时会产生大量重复开发。Roco Studio 的目标是建立一层统一的设备抽象，让上层应用围绕“设备、点位、程序、任务”组织业务，而不是直接处理每个厂商的底层接口。</p>
+<p>平台主要覆盖以下场景：</p>
+<ul>
+<li>管理 Elfin 机械臂、Ego AMR、Roco FAIO 与工业相机等设备。</li>
+<li>查看设备状态，执行点动、位置控制、I&#x2F;O 监控与参数配置。</li>
+<li>构建地图并完成移动机器人的导航与点位管理。</li>
+<li>通过可视化方式编排程序，安装业务插件并调度生产任务。</li>
+<li>在浏览器、Electron 桌面端和 Android 平板端复用同一套核心能力。</li>
+</ul>
+<h2 id="整体架构"><a href="#整体架构" class="headerlink" title="整体架构"></a>整体架构</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Web / Electron / Android Tablet</span><br><span class="line">              │</span><br><span class="line">              ▼</span><br><span class="line">Vue 3 控制台（设备、地图、程序、插件、任务）</span><br><span class="line">        │ HTTP                  │ MQTT</span><br><span class="line">        ▼                       ▼</span><br><span class="line">FastAPI 服务              MQTT / ROS 2 网关</span><br><span class="line">        │                       │</span><br><span class="line">        ├─ PostgreSQL / Prisma  ├─ JSON-RPC 命令与事件</span><br><span class="line">        ├─ Redis                ├─ 主题映射与状态转发</span><br><span class="line">        └─ MinIO                └─ ROS 2 Topic / Service</span><br><span class="line">                                      │</span><br><span class="line">                                      ▼</span><br><span class="line">                         机械臂 / AMR / 相机设备驱动</span><br></pre></td></tr></table></figure>
+
+<p>前端负责交互和实时状态展示；FastAPI 提供设备、数据库、Redis 与对象存储相关的 HTTP 接口；MQTT 网关作为 ROS 2 节点运行，在 MQTT 消息和 ROS 2 Topic&#x2F;Service 之间转发；底层驱动再把统一的 JSON-RPC 请求映射到实际设备 SDK。</p>
+<h2 id="技术栈"><a href="#技术栈" class="headerlink" title="技术栈"></a>技术栈</h2><table>
+<thead>
+<tr>
+<th>层级</th>
+<th>主要技术</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Web 控制端</td>
+<td>Vue 3、Vue Router、Pinia、Element Plus、Tailwind CSS</td>
+<td>页面、状态管理与设备操作交互</td>
+</tr>
+<tr>
+<td>可视化</td>
+<td>Three.js、URDF Loader、ECharts、Leafer UI</td>
+<td>机器人模型、运行数据和程序编排</td>
+</tr>
+<tr>
+<td>实时通信</td>
+<td>MQTT.js、Paho MQTT</td>
+<td>命令下发、状态与事件推送</td>
+</tr>
+<tr>
+<td>HTTP 服务</td>
+<td>Python、FastAPI、Uvicorn</td>
+<td>REST API 与基础服务聚合</td>
+</tr>
+<tr>
+<td>机器人中间件</td>
+<td>ROS 2 Humble、rclpy、C++</td>
+<td>节点通信、设备服务与驱动接入</td>
+</tr>
+<tr>
+<td>数据服务</td>
+<td>PostgreSQL、Prisma、Redis、MinIO</td>
+<td>业务数据、映射缓存与文件存储</td>
+</tr>
+<tr>
+<td>多端交付</td>
+<td>Electron、Android WebView、Kotlin</td>
+<td>桌面端和平板端封装</td>
+</tr>
+</tbody></table>
+<h2 id="我的实际工作范围"><a href="#我的实际工作范围" class="headerlink" title="我的实际工作范围"></a>我的实际工作范围</h2><p>我于 2025 年 12 月至 2026 年 3 月在陕西伏羲启源科技有限公司担任后端开发实习生，主要工作并不是介绍或维护整个 Roco Studio 平台，而是围绕 <strong>AMR 小车的地图、点位、遥控和导航</strong>，完成设备接口适配、前后端链路联调、数据持久化以及可视化控制页面开发。</p>
+<p>我主要修改的代码集中在两个位置：</p>
+<ul>
+<li><code>packages/drivers/roco_faio_driver/src</code>：C++&#x2F;ROS 2 设备驱动、JSON-RPC 方法分发、底盘 WebSocket 协议适配、点位数据管理和导航控制。</li>
+<li><code>client/web/src</code>：AMR 遥控、实时地图、建图和导航页面，以及 MQTT 命令与事件处理。</li>
+</ul>
+<h3 id="设备接口适配与全链路联调"><a href="#设备接口适配与全链路联调" class="headerlink" title="设备接口适配与全链路联调"></a>设备接口适配与全链路联调</h3><p>我完成了 AMR 底盘主要业务接口的适配与调试，包括设备状态、建图与地图保存&#x2F;切换&#x2F;删除、Marker 管理、激光定位、遥控、单点与多点导航、停止任务、充电和急停等能力。</p>
+<p>驱动层使用统一的方法映射表接收上层 JSON-RPC 请求，再根据底盘协议组装命令，通过 WebSocket 下发并等待响应。返回结果会被转换为统一的成功或错误结构，供上层继续处理。联调过程中还需要处理接口超时、参数校验、错误码透传、地图 Base64 数据的新旧协议兼容，以及设备断线后的状态恢复。</p>
+<p>一次控制请求的实际链路可以概括为：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Vue 控制页面</span><br><span class="line">    │ MQTT Command</span><br><span class="line">    ▼</span><br><span class="line">MQTT / ROS 2 网关</span><br><span class="line">    │ ROS 2 Service + JSON-RPC</span><br><span class="line">    ▼</span><br><span class="line">roco_faio_driver 方法分发</span><br><span class="line">    │ WebSocket + 底盘协议</span><br><span class="line">    ▼</span><br><span class="line">AMR 底盘</span><br><span class="line">    │ 状态、地图和任务事件</span><br><span class="line">    └──────────────► ROS 2 / MQTT ──────────────► 页面更新</span><br></pre></td></tr></table></figure>
+
+<p>这项工作的重点不是单独写一个接口，而是确认请求参数、协议转换、设备响应、异步事件和页面状态在整条链路上保持一致。</p>
+<h3 id="实时地图与导航控制页面"><a href="#实时地图与导航控制页面" class="headerlink" title="实时地图与导航控制页面"></a>实时地图与导航控制页面</h3><p>我使用 Vue 3、Element Plus 和 Leafer UI 实现并完善 AMR 的建图与导航页面。页面通过 MQTT 下发建图、保存地图、切换地图、点动和导航等命令，同时订阅地图、位置、路径和任务状态事件。</p>
+<p>实时地图页面需要同时处理栅格地图和动态元素：</p>
+<ul>
+<li>根据地图的分辨率、宽高和原点，将世界坐标转换为画布坐标。</li>
+<li>支持地图缩放、平移、旋转和视图复位，并保证鼠标选点在变换后仍能得到正确坐标。</li>
+<li>在地图上叠加小车位姿、运行轨迹、规划路径、导航点、固定路线和区域信息。</li>
+<li>将建图、地图保存&#x2F;切换、遥控、目标点选择、开始&#x2F;暂停&#x2F;停止导航等操作集中到同一控制页面。</li>
+</ul>
+<p>这部分工作让我处理了一个很典型的工程问题：后端使用机器人世界坐标，地图使用栅格坐标，浏览器画布又有缩放、偏移和 Y 轴方向差异。只有统一坐标转换，地图点击位置、点位存储位置和底盘导航目标才能真正对应起来。</p>
+<h3 id="点位与路线数据持久化"><a href="#点位与路线数据持久化" class="headerlink" title="点位与路线数据持久化"></a>点位与路线数据持久化</h3><p>为了让地图上的业务点位能够长期维护，我使用 PostgreSQL 完成了点位类型、地图点位、固定轨迹点和区域数据的增删改查。接口使用参数化 SQL，并围绕地图名称、点位类型、坐标、朝向和轨迹顺序等字段进行校验与查询。</p>
+<p>前端获取点位列表后在地图中渲染标记，用户可以记录小车当前位置、编辑点位或选择目标点发起导航。这样，数据库中的业务点位、页面上的可视化标记和底盘接收的导航目标形成了闭环，而不是只在页面内保存一份临时坐标。</p>
+<h3 id="导航状态机与路径规划调试"><a href="#导航状态机与路径规划调试" class="headerlink" title="导航状态机与路径规划调试"></a>导航状态机与路径规划调试</h3><p>遥控和导航都会向底盘发送运动命令，如果二者缺少互斥和切换规则，就可能出现命令竞争。我参与实现并调试了 AMR 运动状态管理，将运动过程划分为 <code>IDLE</code>、<code>REMOTE_CONTROL</code>、<code>NAVIGATING</code> 和 <code>ERROR</code> 等状态，并通过独立工作线程执行导航任务，支持任务取消、失败重试、软急停和人工接管。</p>
+<p>在导航链路中，我参与了以下算法和策略的实现与调试：</p>
+<ul>
+<li>使用 OpenCV 按小车半径与安全余量对障碍栅格进行膨胀，避免规划路径贴近障碍物。</li>
+<li>构建距离场，在 A* 的路径代价中增加近障惩罚，引导路径远离障碍区域。</li>
+<li>使用八邻域 A* 生成全局路径，再通过 Floyd 可视性优化减少冗余折点。</li>
+<li>对优化后的路径进行航点采样，并根据相邻航点计算运动朝向后依次下发。</li>
+<li>针对起点或终点落入膨胀区、目标不可达、导航卡顿、终点姿态偏差等问题进行日志分析和现场联调。</li>
+</ul>
+<p>这些工作使导航功能从“能够发送目标点”推进到“能够规划、执行、暂停、接管并反馈结果”的完整业务流程。</p>
+<h2 id="核心模块"><a href="#核心模块" class="headerlink" title="核心模块"></a>核心模块</h2><h3 id="设备管理与控制"><a href="#设备管理与控制" class="headerlink" title="设备管理与控制"></a>设备管理与控制</h3><p>设备页不是简单展示一张列表，而是为不同设备提供相应的控制面板。机械臂需要关节&#x2F;笛卡尔控制、速度设置、点位记录和 I&#x2F;O 监控；AMR 需要地图、导航、位置与任务状态；复合机器人还要协调移动底盘与双机械臂。</p>
+<p>前端按设备类型拆分页面和组件，驱动层则通过统一 JSON-RPC 格式暴露命令。这样既保留了设备的差异化能力，也让上层调用方式保持一致。</p>
+<h3 id="MQTT-与-ROS-2-桥接"><a href="#MQTT-与-ROS-2-桥接" class="headerlink" title="MQTT 与 ROS 2 桥接"></a>MQTT 与 ROS 2 桥接</h3><p>系统同时存在同步命令和异步状态两类数据：</p>
+<ul>
+<li>需要明确结果的控制指令走 ROS 2 Service，并通过 JSON-RPC <code>id</code> 关联请求与响应。</li>
+<li>日志、事件和设备状态走 ROS 2 Topic，再通过 MQTT 推送给订阅端。</li>
+<li>Redis 保存主题映射等高频状态，PostgreSQL 保存需要长期维护的业务数据。</li>
+</ul>
+<p>这条链路把浏览器友好的 MQTT 与机器人生态常用的 ROS 2 连接起来，前端无需直接理解 ROS 2 的运行环境。</p>
+<h3 id="驱动与多实例隔离"><a href="#驱动与多实例隔离" class="headerlink" title="驱动与多实例隔离"></a>驱动与多实例隔离</h3><p>机械臂驱动将厂商 SDK 封装为 ROS 2 服务和主题，并使用可配置的主题前缀隔离多个实例。例如，不同机械臂可以拥有独立的命令、日志和事件通道，避免同一工作站内名称冲突。</p>
+<p>设备连接还需要处理自动重试、超时、断线恢复和降级运行。服务启动时会分别检查 MQTT、Redis 与数据库状态，让非关键依赖暂时不可用时仍能保留部分能力。</p>
+<h3 id="程序、插件与任务"><a href="#程序、插件与任务" class="headerlink" title="程序、插件与任务"></a>程序、插件与任务</h3><p>程序编排负责描述一组可执行步骤，插件把具体工艺封装为可复用能力，任务调度则把程序与设备、时间和运行状态关联起来。项目中包含壳体转运、装配和涂胶等工艺插件，体现了“平台能力 + 行业插件”的扩展思路。</p>
+<h2 id="实习中的工程体会"><a href="#实习中的工程体会" class="headerlink" title="实习中的工程体会"></a>实习中的工程体会</h2><h3 id="先划清系统边界"><a href="#先划清系统边界" class="headerlink" title="先划清系统边界"></a>先划清系统边界</h3><p>前端、消息网关、ROS 2 服务和设备驱动各自解决不同问题。联调时按照 MQTT 请求、ROS 2 服务、JSON-RPC 分发、WebSocket 报文和设备响应逐层排查，比只看页面报错更容易定位问题。</p>
+<h3 id="实时系统必须面对异常"><a href="#实时系统必须面对异常" class="headerlink" title="实时系统必须面对异常"></a>实时系统必须面对异常</h3><p>工业现场的网络、设备和中间件都可能短暂不可用。连接重试、周期状态查询、命令超时、状态回传和异常停止不是附加功能，而是控制系统能够稳定运行的基础。</p>
+<h3 id="可视化必须与真实坐标一致"><a href="#可视化必须与真实坐标一致" class="headerlink" title="可视化必须与真实坐标一致"></a>可视化必须与真实坐标一致</h3><p>地图页面看起来是前端展示，实际上依赖地图元数据、坐标系、设备位姿和导航协议的共同约定。坐标转换只要在原点、分辨率、缩放或 Y 轴方向上出现一次偏差，就会表现为小车图标漂移、点位错位或导航目标错误。因此，可视化本身也是控制链路的一部分。</p>
+<h2 id="项目总结"><a href="#项目总结" class="headerlink" title="项目总结"></a>项目总结</h2><p>Roco Studio 让我第一次从完整链路理解工业软件：页面上的一次点击，会经过 MQTT、ROS 2 网关、JSON-RPC 方法分发和设备驱动到达真实底盘，最终再沿事件链路返回界面。我的实际工作覆盖了 AMR 接口适配、实时地图、点位存储、遥控页面和导航功能，也让我理解了跨语言、跨进程和跨设备协作时，如何设计可调试、可恢复且状态一致的控制链路。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://SeeYouLikeLast.github.io">Yixun_Liu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://seeyoulikelast.github.io/2026/08/09/Roco-Studio%E5%AE%9E%E4%B9%A0%E9%A1%B9%E7%9B%AE%E5%A4%8D%E7%9B%98/">https://seeyoulikelast.github.io/2026/08/09/Roco-Studio%E5%AE%9E%E4%B9%A0%E9%A1%B9%E7%9B%AE%E5%A4%8D%E7%9B%98/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://SeeYouLikeLast.github.io" target="_blank">SeeYouLikeLast</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/C/">C++</a><a class="post-meta__tags" href="/tags/%E5%AE%9E%E4%B9%A0/">实习</a><a class="post-meta__tags" href="/tags/AMR/">AMR</a><a class="post-meta__tags" href="/tags/ROS-2/">ROS 2</a><a class="post-meta__tags" href="/tags/MQTT/">MQTT</a><a class="post-meta__tags" href="/tags/Vue/">Vue</a></div><div class="post-share"><div class="social-share" data-image="/img/avatar.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2026/08/09/%E7%BA%A6%E4%B8%AA%E7%90%83%E5%B9%B3%E5%8F%B0%E9%A1%B9%E7%9B%AE%E5%A4%8D%E7%9B%98/" title="约个球：球类运动生活服务平台项目复盘"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">约个球：球类运动生活服务平台项目复盘</div></div><div class="info-2"><div class="info-item-1">“约个球”是一个面向羽毛球、乒乓球、足球、篮球、网球和排球等运动的移动端生活服务平台。项目把找场所、购买团购、装备商城、同城约球、球友社区和 AI 推荐组织成一条完整的演示链路。  当前项目用于学习与功能演示：支付为模拟支付，真实场所来自高德 POI，团购、库存、订单、评价和社区内容由平台本地数据维护。它不代表已经具备商业系统所需的支付合规、高可用、灾备与容量保障。  项目预览        附近场所     球友社区     同城约球           装备商城     AI 助手     体验闭环真实场所 · 场馆团购同城约球 · 装备商城社区 Feed · AI 推荐      项目 README 记录的演示地址为 https://121.40.140.135/，建议使用手机浏览器访问；地址是否可用以服务器当前部署状态为准。 功能设计场所、团购与装备首页优先使用浏览器定位，通过高德地图搜索附近真实运动场所，并提供逆地理编码、距离和场所详情。平台本地维护场馆团购、装备商品、库存、购物车、订单与评价数据，使用户可以从发现地点继续完成购买和约球。 同城约球与社区用户可以按运动类...</div></div></div></a><a class="pagination-related" href="/2026/05/31/%E5%90%8E%E7%AB%AF%E6%A8%A1%E5%9D%97%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" title="Tlias后端模块化学习笔记"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Tlias后端模块化学习笔记</div></div><div class="info-2"><div class="info-item-1">0. 后端学习总路线Java Web 后端可以按下面路线理解： 12345678910111213141516171819202122232425Maven 项目管理  ↓SpringBoot Web 入门  ↓HTTP 协议与 REST 接口  ↓三层架构 Controller-Service-Mapper  ↓数据库 MySQL 与 SQL  ↓MyBatis 操作数据库  ↓业务模块 CRUD 实战  ↓分页、条件、多表查询  ↓事务、异常、日志、文件上传  ↓登录认证 JWT、Filter、Interceptor  ↓AOP 面向切面编程  ↓SpringBoot 原理与自动配置  ↓Maven 高级、多模块、部署、Docker  后端开发的核心目标是： 1接收请求 → 处理业务 → 操作数据库 → 返回结果 → 保证安全、稳定、可维护   第一模块：Maven 项目管理1.1 Maven 的三大作用   作用 说明    依赖管理 不手动复制 jar，通过 pom.xml 统一声明依赖   统一项目结构 所有 Maven 项目目录规范一致   标准化构建 用命令完成编译...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2026/08/09/%E7%BA%A6%E4%B8%AA%E7%90%83%E5%B9%B3%E5%8F%B0%E9%A1%B9%E7%9B%AE%E5%A4%8D%E7%9B%98/" title="约个球：球类运动生活服务平台项目复盘"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-09</div><div class="info-item-2">约个球：球类运动生活服务平台项目复盘</div></div><div class="info-2"><div class="info-item-1">“约个球”是一个面向羽毛球、乒乓球、足球、篮球、网球和排球等运动的移动端生活服务平台。项目把找场所、购买团购、装备商城、同城约球、球友社区和 AI 推荐组织成一条完整的演示链路。  当前项目用于学习与功能演示：支付为模拟支付，真实场所来自高德 POI，团购、库存、订单、评价和社区内容由平台本地数据维护。它不代表已经具备商业系统所需的支付合规、高可用、灾备与容量保障。  项目预览        附近场所     球友社区     同城约球           装备商城     AI 助手     体验闭环真实场所 · 场馆团购同城约球 · 装备商城社区 Feed · AI 推荐      项目 README 记录的演示地址为 https://121.40.140.135/，建议使用手机浏览器访问；地址是否可用以服务器当前部署状态为准。 功能设计场所、团购与装备首页优先使用浏览器定位，通过高德地图搜索附近真实运动场所，并提供逆地理编码、距离和场所详情。平台本地维护场馆团购、装备商品、库存、购物车、订单与评价数据，使用户可以从发现地点继续完成购买和约球。 同城约球与社区用户可以按运动类...</div></div></div></a><a class="pagination-related" href="/2026/05/31/%E5%89%8D%E7%AB%AF%E6%A8%A1%E5%9D%97%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" title="Tlias前端模块化学习笔记"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-05-31</div><div class="info-item-2">Tlias前端模块化学习笔记</div></div><div class="info-2"><div class="info-item-1">0. 前端学习总路线前端开发的本质是： 1结构 HTML → 样式 CSS → 行为 JavaScript → 数据驱动 Vue → 组件库 ElementPlus → 网络请求 Ajax/Axios → 工程化 Vite → 项目实战  可以用一句话理解：  HTML 决定页面有什么。 CSS 决定页面长什么样。 JavaScript 决定页面能做什么。 Vue 让页面根据数据自动变化。 Ajax&#x2F;Axios 让前端和后端通信。 ElementPlus 提供现成的后台管理组件。 Vite + Vue 工程化 让前端项目更适合真实开发。   第一模块：Web 标准与浏览器运行机制1.1 Web 标准三件套Web 标准由三类技术共同完成：    技术 职责 类比    HTML 页面结构和内容 房子的骨架   CSS 页面样式和布局 房子的装修   JavaScript 页面行为和交互 房子的电器和开关   一个网页从无到有的过程通常是： 123456789浏览器加载 HTML      ↓解析标签，形成 DOM 树      ↓加载 CSS，计算样式      ↓执行 ...</div></div></div></a><a class="pagination-related" href="/2026/01/11/Workflow%E5%BA%93%E6%96%87%E4%BB%B6%E5%AD%A6%E4%B9%A0/" title="Sogou Workflow 源码学习笔记"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-01-11</div><div class="info-item-2">Sogou Workflow 源码学习笔记</div></div><div class="info-2"><div class="info-item-1">项目资源链接 Workflow 官方项目：workflow 个人 Workflow 项目 (Gateway)：workflow-gateway   根基类 (Kernel Core) SubTask  所有任务的基类。定义了 dispatch() (开始执行) 和 done() (完成回调) 接口。    五大派生类 (Kernel Request Layer)Workflow 在内核层将任务分为了 5 种基本行为模式：  CommRequest (通信任务)  用于网络通信。  派生类: WFNetworkTask&lt;REQ, RESP&gt; (所有网络任务的基类，如 HTTP, Redis, MySQL 等任务)。    ExecRequest (计算任务)  用于线程池计算。  派生类:  WFThreadTask&lt;INPUT, OUTPUT&gt;: 通用计算任务。  WFGoTask: 类似 Go 语言协程的简单计算任务。  WFSortTask, WFMergeTask 等: 在 WFAlgoTaskFactory.h 中定义，它们本质上是 WFThrea...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Yixun_Liu</div><div class="author-info-description">码行千里，积于跬步。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">12</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">27</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/seeyoulikelast"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/SeeYouLikeLast" target="_blank" title="GitHub"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:xidian_yixunliu@163.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE%E8%A6%81%E8%A7%A3%E5%86%B3%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">1.</span> <span class="toc-text">项目要解决的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84"><span class="toc-number">2.</span> <span class="toc-text">整体架构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%80%E6%9C%AF%E6%A0%88"><span class="toc-number">3.</span> <span class="toc-text">技术栈</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%88%91%E7%9A%84%E5%AE%9E%E9%99%85%E5%B7%A5%E4%BD%9C%E8%8C%83%E5%9B%B4"><span class="toc-number">4.</span> <span class="toc-text">我的实际工作范围</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E5%A4%87%E6%8E%A5%E5%8F%A3%E9%80%82%E9%85%8D%E4%B8%8E%E5%85%A8%E9%93%BE%E8%B7%AF%E8%81%94%E8%B0%83"><span class="toc-number">4.1.</span> <span class="toc-text">设备接口适配与全链路联调</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E6%97%B6%E5%9C%B0%E5%9B%BE%E4%B8%8E%E5%AF%BC%E8%88%AA%E6%8E%A7%E5%88%B6%E9%A1%B5%E9%9D%A2"><span class="toc-number">4.2.</span> <span class="toc-text">实时地图与导航控制页面</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%82%B9%E4%BD%8D%E4%B8%8E%E8%B7%AF%E7%BA%BF%E6%95%B0%E6%8D%AE%E6%8C%81%E4%B9%85%E5%8C%96"><span class="toc-number">4.3.</span> <span class="toc-text">点位与路线数据持久化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%BC%E8%88%AA%E7%8A%B6%E6%80%81%E6%9C%BA%E4%B8%8E%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92%E8%B0%83%E8%AF%95"><span class="toc-number">4.4.</span> <span class="toc-text">导航状态机与路径规划调试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9D%97"><span class="toc-number">5.</span> <span class="toc-text">核心模块</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E5%A4%87%E7%AE%A1%E7%90%86%E4%B8%8E%E6%8E%A7%E5%88%B6"><span class="toc-number">5.1.</span> <span class="toc-text">设备管理与控制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MQTT-%E4%B8%8E-ROS-2-%E6%A1%A5%E6%8E%A5"><span class="toc-number">5.2.</span> <span class="toc-text">MQTT 与 ROS 2 桥接</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A9%B1%E5%8A%A8%E4%B8%8E%E5%A4%9A%E5%AE%9E%E4%BE%8B%E9%9A%94%E7%A6%BB"><span class="toc-number">5.3.</span> <span class="toc-text">驱动与多实例隔离</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A8%8B%E5%BA%8F%E3%80%81%E6%8F%92%E4%BB%B6%E4%B8%8E%E4%BB%BB%E5%8A%A1"><span class="toc-number">5.4.</span> <span class="toc-text">程序、插件与任务</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E4%B9%A0%E4%B8%AD%E7%9A%84%E5%B7%A5%E7%A8%8B%E4%BD%93%E4%BC%9A"><span class="toc-number">6.</span> <span class="toc-text">实习中的工程体会</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%88%E5%88%92%E6%B8%85%E7%B3%BB%E7%BB%9F%E8%BE%B9%E7%95%8C"><span class="toc-number">6.1.</span> <span class="toc-text">先划清系统边界</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E6%97%B6%E7%B3%BB%E7%BB%9F%E5%BF%85%E9%A1%BB%E9%9D%A2%E5%AF%B9%E5%BC%82%E5%B8%B8"><span class="toc-number">6.2.</span> <span class="toc-text">实时系统必须面对异常</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%AF%E8%A7%86%E5%8C%96%E5%BF%85%E9%A1%BB%E4%B8%8E%E7%9C%9F%E5%AE%9E%E5%9D%90%E6%A0%87%E4%B8%80%E8%87%B4"><span class="toc-number">6.3.</span> <span class="toc-text">可视化必须与真实坐标一致</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93"><span class="toc-number">7.</span> <span class="toc-text">项目总结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/08/09/Roco-Studio%E5%AE%9E%E4%B9%A0%E9%A1%B9%E7%9B%AE%E5%A4%8D%E7%9B%98/" title="Roco Studio 实习项目复盘：从 AMR 接口适配到地图导航">Roco Studio 实习项目复盘：从 AMR 接口适配到地图导航</a><time datetime="2026-08-08T16:00:00.000Z" title="发表于 2026-08-09 00:00:00">2026-08-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/08/09/%E7%BA%A6%E4%B8%AA%E7%90%83%E5%B9%B3%E5%8F%B0%E9%A1%B9%E7%9B%AE%E5%A4%8D%E7%9B%98/" title="约个球：球类运动生活服务平台项目复盘">约个球：球类运动生活服务平台项目复盘</a><time datetime="2026-08-08T16:00:00.000Z" title="发表于 2026-08-09 00:00:00">2026-08-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/05/31/%E5%89%8D%E7%AB%AF%E6%A8%A1%E5%9D%97%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" title="Tlias前端模块化学习笔记">Tlias前端模块化学习笔记</a><time datetime="2026-05-30T16:00:00.000Z" title="发表于 2026-05-31 00:00:00">2026-05-31</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/05/31/%E5%90%8E%E7%AB%AF%E6%A8%A1%E5%9D%97%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" title="Tlias后端模块化学习笔记">Tlias后端模块化学习笔记</a><time datetime="2026-05-30T16:00:00.000Z" title="发表于 2026-05-31 00:00:00">2026-05-31</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/11/%E6%9D%8E%E6%B2%90/" title="深度学习学习笔记（一）">深度学习学习笔记（一）</a><time datetime="2026-04-10T16:00:00.000Z" title="发表于 2026-04-11 00:00:00">2026-04-11</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By Yixun_Liu</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.1</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.3</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.3"></script><script src="/js/main.js?v=5.5.3"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        loader: {
+          load: [
+            // Four font extension packages (optional)
+            //- '[tex]/bbm',
+            //- '[tex]/bboldx',
+            //- '[tex]/dsfont',
+            '[tex]/mhchem'
+          ],
+          paths: {
+            'mathjax-newcm': '[mathjax]/../@mathjax/mathjax-newcm-font',
+
+            //- // Four font extension packages (optional)
+            //- 'mathjax-bbm-extension': '[mathjax]/../@mathjax/mathjax-bbm-font-extension',
+            //- 'mathjax-bboldx-extension': '[mathjax]/../@mathjax/mathjax-bboldx-font-extension',
+            //- 'mathjax-dsfont-extension': '[mathjax]/../@mathjax/mathjax-dsfont-font-extension',
+            'mathjax-mhchem-extension': '[mathjax]/../@mathjax/mathjax-mhchem-font-extension'
+          }
+        },
+        output: {
+          font: 'mathjax-newcm',
+        },
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+          packages: {
+            '[+]': [
+              'mhchem'
+            ]
+          }
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          menuOptions: {
+            settings: {
+              enrich: false  // Turn off Braille and voice narration text automatic generation
+            }
+          },
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
